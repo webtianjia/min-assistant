@@ -1,0 +1,54 @@
+{
+  "pages": [
+
+
+    "pages/order/create/main",
+    "pages/consignee/editConsignee/main",
+    "pages/sku/editOrderSku/main",
+    "pages/order/orderList/main",
+    "pages/systemReceiving/main",
+    "pages/usedSkuList/main",
+    "pages/sku/skuList/main",
+    "pages/sku/editSku/main",
+    "pages/order/orderEdit/main",
+    "pages/order/orderEdit/orderEditSku/main",
+    "pages/order/orderDetail/main",
+    "pages/order/orderSuccess/main",
+    "pages/consignee/consigneeList/main",
+    "pages/sender/senderList/main",
+    "pages/sender/editSender/main",
+    "pages/user/main"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#2aa2fa",
+    "navigationBarTitleText": "转运助手",
+    "navigationBarTextStyle": "#ffffff"
+  },
+  "tabBar": {
+    "color": "#96cef8",
+    "selectedColor": "#fff",
+    "borderStyle": "black",
+    "backgroundColor": "#2aa2fa",
+    "list": [
+      {
+        "pagePath": "pages/order/create/main",
+        "iconPath": "/static/img/tab-order.png",
+        "selectedIconPath": "/static/img/tab-order-active.png",
+        "text": "下单"
+      },
+      {
+        "pagePath": "pages/sku/skuList/main",
+        "iconPath": "/static/img/tab-sku.png",
+        "selectedIconPath": "/static/img/tab-sku-active.png",
+        "text": "常用寄件商品"
+      },
+      {
+        "pagePath": "pages/user/main",
+        "iconPath": "/static/img/tab-user.png",
+        "selectedIconPath": "/static/img/tab-user-active.png",
+        "text": "我的"
+      }
+    ]
+  }
+}

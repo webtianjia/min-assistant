@@ -1,0 +1,212 @@
+<template>
+  <div class="container">
+    <div class="user-wrapper">
+      <div class="user-avatar">
+        <open-data type="userAvatarUrl"></open-data>
+      </div>
+      <div class='user-name'>
+        <open-data type="userNickName"></open-data>
+      </div>
+    </div>
+    <ul class="nav">
+      <li class="nav-item" @click="goTo('/pages/order/orderList/main?data=create')">
+        <i class="icon i-1"></i>
+        <span class="text">未收货</span>
+      </li>
+      <li class="nav-item" @click="goTo('/pages/order/orderList/main?data=income')">
+        <i class="icon i-2"></i>
+        <span class="text">运输中</span>
+      </li>
+      <li class="nav-item" @click="goTo('/pages/order/orderList/main?data=close')">
+        <i class="icon i-3"></i>
+        <span class="text">已完结</span>
+      </li>
+      <li class="nav-item" @click="goTo('/pages/order/orderList/main?data=all')">
+        <!--<badge value="99"></badge>-->
+        <i class="icon i-4"></i>
+        <span class="text">全部订单</span>
+      </li>
+    </ul>
+    <split></split>
+    <ul class="list-group">
+      <li class="list-group-item split" @click="goTo('/pages/consignee/consigneeList/main')">
+        <span class="text">收件人</span>
+        <i class="iconfont icon-right"></i>
+      </li>
+      <li class="list-group-item split" @click="goTo('/pages/sender/senderList/main')">
+        <span class="text">寄件人</span>
+        <i class="iconfont icon-right"></i>
+      </li>
+      <li class="list-group-item" @click="goTo('/pages/systemReceiving/main')">
+        <span class="text">收货点</span>
+        <i class="iconfont icon-right"></i>
+      </li>
+      <li class="list-group-item" style="margin-top: 25px">
+        <span class="text">打包授权码：{{auth_code}}</span>
+        <span class="copy" @click="setClipboardData(auth_code)"><span class="text">复制</span></span>
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script>
+  import badge from "@/components/badge";
+  import split from "@/components/split";
+
+  export default {
+    name: "user",
+    components: {
+      split,
+      badge
+    },
+    data(){
+      return {
+        auth_code:""
+      }
+    },
+    methods: {
+      goTo(url) {
+        wx.navigateTo({
+          url: url
+        });
+      },
+      setClipboardData(value) {
+        wx.setClipboardData({
+          data: value
+        });
+      },
+      setAuthCode() {
+        this.auth_code = wx.getStorageSync("auth_code");
+      }
+    },
+    onShow() {
+
+    },
+    mounted() {
+      this.setAuthCode();
+    },
+    onUnload() {
+      if (this.$options.data) {
+        Object.assign(this.$data, this.$options.data());
+      }
+      this._watchers = [];
+      if (this._watcher && this._watcher.teardown) {
+        this._watcher.teardown();
+      }
+    }
+  };
+</script>
+
+<style scoped lang="less">
+  .container {
+    background: #f1f1f1;
+  }
+
+  .user-wrapper {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: #2aa2fa;
+    .user-avatar {
+      width: 60px;
+      height: 60px;
+      overflow: hidden;
+      border-radius: 50%;
+      border: 1px solid #fff;
+    }
+    .user-name {
+      margin-left: 10px;
+      font-size: 15px;
+      color: #fff;
+    }
+  }
+
+  .nav {
+    background: #2aa2fa;
+    display: flex;
+    padding: 18px 15px 24px;
+    .nav-item {
+      flex: 0 0 25%;
+      width: 25%;
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      .text {
+        margin-top: 10px;
+        font-size: 12px;
+        color: #fff;
+      }
+      .icon {
+        width: 36px;
+        height: 36px;
+        background: no-repeat center;
+        background-size: cover;
+        &.i-1 {
+          background-image: data-uri('../../../static/img/i-1.png');
+        }
+        &.i-2 {
+          background-image: data-uri('../../../static/img/i-2.png');
+        }
+        &.i-3 {
+          background-image: data-uri('../../../static/img/i-3.png');
+        }
+        &.i-4 {
+          background-image: data-uri('../../../static/img/i-4.png');
+        }
+      }
+    }
+  }
+
+  .list-group {
+    .list-group-item {
+      padding: 0 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 44px;
+      background: #fff;
+      .text {
+        font-size: 15px;
+        color: #2e2e2e;
+      }
+      .icon-right {
+        width: 11px;
+        height: 12px;
+        background: data-uri("../../../static/img/right.png") no-repeat center;
+        background-size: cover;
+      }
+      &.split {
+        position: relative;
+        &::after {
+          content: '';
+          height: 1px;
+          width: 100%;
+          background: #f1f1f1;
+          position: absolute;
+          bottom: 0;
+          left: 15px;
+        }
+      }
+      position: relative;
+      .copy {
+        right: 0;
+        padding: 0 15px;
+        height: 100%;
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .text {
+          border: 1px solid #999;
+          border-radius: 4px;
+          width: 34px;
+          height: 14px;
+          font-size: 10px;
+          text-align: center;
+        }
+      }
+    }
+  }
+</style>
