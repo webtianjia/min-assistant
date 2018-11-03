@@ -22,9 +22,8 @@ const getters = {
 const mutations = {
   initParam(state) {
     state.param.start = 0;
-    state.param.query_name = "";
     state.param.page = 1;
-    state.skuList = [];
+    state.systemReceivingList = [];
   },
   changeStart(state) {
     state.param.page++;

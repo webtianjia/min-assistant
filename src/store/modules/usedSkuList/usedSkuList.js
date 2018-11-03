@@ -90,8 +90,8 @@ const mutations = {
     setOrderSkuList(orderSkuList);
     this.commit("usedSkuList/cartTotalPrice");
   },
-  addOrderSku(state, sku) {
-    sku.goods_number = 1;
+  addOrderSku(state, { sku, goods_number }) {
+    sku.goods_number = goods_number;
     let orderSkuList = getOrderSkuList();
     if (orderSkuList) {
       orderSkuList.push(sku);

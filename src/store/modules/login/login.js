@@ -7,7 +7,7 @@ const getters = {};
 // mutations
 const mutations = {
   setStorage(state, data) {
-    wx.setStorageSync("user_id", data.id);
+    wx.setStorageSync("userId", data.id);
     wx.setStorageSync("auth_code", data.auth_code);
   }
 };
@@ -18,9 +18,11 @@ const actions = {
     wx.login({
       success(WXresponse) {
         loginAPI.login(WXresponse).then(response => {
-          commit("setStorage", response.data);
+          if(response.success){
+            commit("setStorage", response.data);
+          }
         }).catch(error => {
-          console.log(error);
+          console.log("登录出错",error);
         });
       }
     });

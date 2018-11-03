@@ -14,7 +14,6 @@
       <div v-if="skuList.length<=0" style="margin-top: 70px">
         <no-data type="no-sku" text="暂无寄件商品，请添加"></no-data>
       </div>
-
     </div>
     <div v-if="isNoDataBottom && skuList.length > 3" style="margin-bottom: 50px">
       <no-data-bottom></no-data-bottom>
@@ -52,8 +51,8 @@
     name: "usedSkuList",
     computed: {
       ...mapState("usedSkuList", {
-        settlementDialogStatus: state => state.settlementDialogStatus,
-        skuList: state => state.skuList,
+        settlementDialogStatus: "settlementDialogStatus",
+        skuList: "skuList",
         cartTotalPrice: "cartTotalPrice",
         cartTotalCount: "cartTotalCount"
       }),

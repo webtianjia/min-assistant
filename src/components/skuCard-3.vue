@@ -9,9 +9,11 @@
         <span>￥</span>
         <span>{{sku.goods_price}}</span>
       </div>
-      <span class="qty-control">{{sku.goods_number}}</span>
-      <i class="icon icon-edit" @click="editSku(sku,index)"></i>
-      <i class="icon icon-del" @click="deleteConfirm(index)"></i>
+      <span class="qty-control">x{{sku.goods_number}}</span>
+      <div class="icon-control">
+        <i class="icon icon-del" @click="deleteConfirm(index)"></i>
+        <i class="icon icon-edit" @click="editSku(sku,index)"></i>
+      </div>
     </div>
   </div>
 </template>
@@ -72,20 +74,11 @@
         align-items: center;
         font-size: 13px;
         margin-right: 24px;
-        .input {
-          margin-left: 5px;
-          font-size: 13px;
-          width: 70px;
-          height: 19px;
-          line-height: 17px;
-          background: #f6f6f6;
-          border: 1rpx solid #bfbfbf;
-          border-radius: 2px;
-          padding-left: 5px;
-        }
+      }
+      .icon-control{
+        display: flex;
       }
       .icon {
-        margin-left: 29px;
         justify-self: flex-start;
         width: 38px;
         height: 38px;

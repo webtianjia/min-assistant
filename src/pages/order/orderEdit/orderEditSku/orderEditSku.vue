@@ -5,7 +5,7 @@
       <div class="add-default-btn"></div>
     </div>
     <div class="sku-list">
-      <div v-for="(sku,index) in goodsList" :key="index">
+      <div v-for="(sku,index) in goodsList" :key="sku.id">
         <sku-card3 :sku="sku" :index="index" @changeQty="changeQty" @deleteConfirm="deleteConfirm" @editSku="editSku"></sku-card3>
         <split></split>
       </div>
@@ -33,8 +33,8 @@
       skuCard3
     },
     computed: {
-      ...mapState("orderEdit", {
-        goodsList: state => state.orderDetail.goodsList
+      ...mapGetters("orderEdit", {
+        goodsList: "goodsList"
       })
     },
     methods: {

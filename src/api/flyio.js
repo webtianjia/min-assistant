@@ -12,12 +12,12 @@ fly.interceptors.request.use((request) => {
     mask: true
   });
   request.headers = {
-    "user_id": wx.getStorageSync("user_id")||'',
+    "userId": wx.getStorageSync("userId")||'',
     "content-type": "application/x-www-form-urlencoded",
     "appCode": utils.appCode
   };
-  if (!request.headers.user_id) {
-    delete  request.headers.user_id;
+  if (!request.headers.userId) {
+    delete  request.headers.userId;
   }
 
   let authParams = {

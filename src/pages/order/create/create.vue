@@ -66,7 +66,7 @@
           <div class="sku-name text-overflow">{{sku.goods_name}}{{sku.goods_brand}}</div>
           <div class="sku-spc text-overflow">{{sku.goods_standard}}</div>
           <div class="sku-price text-overflow">￥{{sku.goods_price}}</div>
-          <div class="sku-qty text-overflow">{{sku.qty}}</div>
+          <div class="sku-qty text-overflow">{{sku.goods_number}}</div>
           <div class="sku-controller">
             <i class="icon icon-edit" @click="editSku(sku)"></i>
             <i class="icon icon-del" @click="deleteConfirm(sku.id)"></i>

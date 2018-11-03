@@ -6,6 +6,8 @@ function formatStatus(status) {
       return "已完结";
     case "income":
       return "运输中";
+    case "shipmented":
+      return "运输中";
     case "all":
       return "全部";
   }

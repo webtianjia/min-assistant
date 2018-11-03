@@ -135,7 +135,9 @@
             order: JSON.stringify(param),
             goods: goodsList
           }).then(response => {
-            console.log(response);
+            if(response.success){
+              this.$router.back();
+            }
           }).catch(error => {
             console.log("修改订单失败", error);
           });

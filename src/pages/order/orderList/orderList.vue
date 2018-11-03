@@ -50,7 +50,7 @@
             <div class="order-wrapper">
               <i class="icon icon-edit" v-show="order.status==='create'"
                  @click.stop="goTo('/pages/order/orderEdit/main',order.id)"></i>
-              <i class="icon icon-del" @click.stop="deleteConfirm(order.id)"></i>
+              <i class="icon icon-del" v-show="order.status==='create'" @click.stop="deleteConfirm(order.id)"></i>
             </div>
           </div>
         </div>

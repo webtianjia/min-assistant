@@ -118,8 +118,11 @@
         display: flex;
         align-items: center;
         .icon {
+          flex: 0 0 16px;
           width: 16px;
           height: 16px;
+
+          white-space: nowrap;
           background: no-repeat center;
           background-size: cover;
           margin-right: 5px;

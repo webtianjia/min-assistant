@@ -60,8 +60,8 @@
     },
     methods: {
       ...mapMutations("usedSkuList", {
-        appendSku: "appendSku",
-        addOrderSku: "addOrderSku"
+        addOrderSku: "addOrderSku",
+        editSku: "editSku"
       }),
       ...mapMutations("orderEdit", {
         orderEditAddSku: "addSku",
@@ -81,7 +81,7 @@
           if (this.isUpdate) {
             /*修改*/
             if (this.sku.updateOrder) {
-              console.log("修改订单商品")
+              this.orderEditUpdateSku(this.sku)
             } else {
               this.editSku(this.sku);
             }
@@ -94,7 +94,7 @@
             } else {
               this.addSku(this.sku).then(response => {
                 if (response.success) {
-                  this.addOrderSku(response.data);
+                  this.addOrderSku({ sku: response.data, goods_number: this.sku.goods_number });
                   this.$router.back();
                 }
               }).catch(error => {
@@ -156,8 +156,7 @@
         this.isUpdate = false;
       }
       this.initValidate();
-    }
-    ,
+    },
     onUnload() {
       if (this.$options.data) {
         Object.assign(this.$data, this.$options.data());

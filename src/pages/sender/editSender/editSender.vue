@@ -82,11 +82,9 @@
         const rules = {
           senderName: {
             required: true,
-            senderName: true
           },
           senderPhone: {
             required: true,
-            tel: true
           },
           senderAddr: {
             required: true,
@@ -103,7 +101,7 @@
           },
           senderAddr: {
             required: "请输入详细地址",
-            minlength: "请输入详细收货地址,不少于5个汉字"
+            minlength: "请输入详细收货地址,不少于5个字符"
           }
         };
         Validate = new WxValidate(rules, messages);
