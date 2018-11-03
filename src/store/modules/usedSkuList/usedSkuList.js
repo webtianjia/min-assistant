@@ -57,7 +57,9 @@ const mutations = {
       return total + parseInt(sku.goods_number);
     }, 0);
   },
-
+  setQueryName(state, query_name) {
+    state.param.query_name = query_name;
+  },
   initParam(state) {
     state.param.start = 0;
     state.param.query_name = "";

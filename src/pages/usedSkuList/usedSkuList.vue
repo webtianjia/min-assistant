@@ -1,7 +1,7 @@
 <template>
   <div class="container " :class="{'disabled-scroll':settlementDialogStatus}">
     <div class="header-fixed">
-      <search-bar @change="searchSku"></search-bar>
+      <search-bar ref="searchBar" @change="searchSku"></search-bar>
       <split color="#fff"></split>
       <div class="add-default-card" @click="goTo('/pages/sku/editOrderSku/main')">
         <div class="add-default-btn"></div>
@@ -85,11 +85,13 @@
         }
       },
       searchSku(value) {
+        this.setQueryName(value);
         this.getSkuList();
       }
     },
     onShow() {
       this.initParam();
+      this.$refs.searchBar.clear();
       this.getSkuList();
     },
     onUnload() {

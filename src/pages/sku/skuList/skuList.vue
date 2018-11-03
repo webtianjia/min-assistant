@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="header-fixed">
-      <search-bar @change="searchSku"></search-bar>
+      <search-bar ref="searchBar" @change="searchSku"></search-bar>
       <split color="#fff"></split>
       <div class="add-default-card" @click="goTo()">
         <div class="add-default-btn"></div>
@@ -47,7 +47,8 @@
       }),
       ...mapMutations("skuList", {
         initParam: "initParam",
-        changeStart: "changeStart"
+        changeStart: "changeStart",
+        setQueryName: "setQueryName"
       }),
       deleteConfirm(skuId) {
         let that = this;
@@ -71,11 +72,13 @@
       },
       searchSku(value) {
         this.initParam();
+        this.setQueryName(value);
         this.getSkuList();
       }
     },
     onShow() {
       this.initParam();
+      this.$refs.searchBar.clear();
       this.getSkuList();
     },
     onReachBottom() {

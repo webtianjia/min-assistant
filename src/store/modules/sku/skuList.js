@@ -34,6 +34,9 @@ const mutations = {
     state.param.page = 1;
     state.skuList = [];
   },
+  setQueryName(state, query_name) {
+    state.param.query_name = query_name;
+  },
   changeStart(state) {
     state.param.page++;
     state.param.start = (state.param.page - 1) * state.param.limit;
