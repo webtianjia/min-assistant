@@ -39,7 +39,6 @@
     },
     methods: {
       ...mapMutations("orderEdit", {
-        changeQty: "changeQty",
         deleteSku: "deleteSku"
       }),
       deleteConfirm(id) {

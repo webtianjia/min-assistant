@@ -18,14 +18,6 @@ const mutations = {
   setOrder(state, orderDetail) {
     state.orderDetail = orderDetail;
   },
-  deleteSku(state, index) {
-    state.orderDetail.goodsList.splice(index, 1);
-  },
-  changeQty(state, { value, index }) {
-    console.log(state.orderDetail.goodsList[index], value);
-    //state.orderDetail.goodsList[index].goods_number = value;
-    Vue.set(state.orderDetail.goodsList[index], "goods_number", value);
-  },
   setConsignee(state, consignee) {
     console.log(consignee);
     state.orderDetail.consignee = consignee.name;
@@ -40,14 +32,22 @@ const mutations = {
     state.orderDetail.sender_address = sender.address;
     state.orderDetail.sender_phone = sender.phone;
   },
-  addSku(state, sku) {
+
+  addSku(state, { sku, goods_number }) {
+    sku.goods_number = goods_number;
     state.orderDetail.goodsList.push(sku);
   },
-  updateSku(state, sku) {
-    const index = sku.index;
+  deleteSku(state, id) {
     let goodsList = state.orderDetail.goodsList;
-    state.orderDetail.goodsList=[];
-    goodsList[index] = Object.assign({}, sku);
+    state.orderDetail.goodsList = goodsList.filter(item => item.id !== id);
+  },
+  updateSku(state, sku) {
+    let goodsList = state.orderDetail.goodsList;
+    goodsList.find(item => {
+      if (item.id === sku.id) {
+        item = Object.assign(item, sku);
+      }
+    });
     state.orderDetail.goodsList = goodsList;
   }
 };

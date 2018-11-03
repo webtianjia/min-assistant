@@ -4,19 +4,19 @@
       <div class="form-horizontal">
         <div class="form-group">
           <label class="label">商品名称</label>
-          <input name="skuName" :disabled="isUpdate" v-model="sku.goods_name" class="form-control"
+          <input name="skuName"  v-model="sku.goods_name" class="form-control"
                  placeholder-style="color:#9e9e9e;"
                  placeholder="请输入商品名称">
         </div>
         <div class="form-group">
           <label class="label">商品品牌</label>
-          <input name="skuBrand" :disabled="isUpdate" v-model="sku.goods_brand" class="form-control"
+          <input name="skuBrand"  v-model="sku.goods_brand" class="form-control"
                  placeholder-style="color:#9e9e9e;"
                  placeholder="请输入商品品牌">
         </div>
         <div class="form-group">
           <label class="label">规格型号</label>
-          <input name="skuPic" :disabled="isUpdate" v-model="sku.goods_standard" class="form-control"
+          <input name="skuPic"  v-model="sku.goods_standard" class="form-control"
                  placeholder-style="color:#9e9e9e;"
                  placeholder="请输入规格型号，如：500g">
         </div>
@@ -47,8 +47,7 @@
           goods_brand: "",
           goods_standard: "",
           goods_price: ""
-        },
-        isUpdate:false
+        }
       };
     },
     methods: {
@@ -109,10 +108,8 @@
       let param = this.$mp.query.data;
       if (param) {
         this.sku = Object.assign(this.sku, JSON.parse(param));
-        this.isUpdate = true;
       } else {
         initData(this.sku);
-        this.isUpdate = false;
       }
       this.initValidate();
     },

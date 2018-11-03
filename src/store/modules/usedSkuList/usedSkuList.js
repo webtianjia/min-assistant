@@ -44,6 +44,7 @@ const mutations = {
       if (state.cartTotalCount === 0) {
         this.commit("usedSkuList/setSettlementStatus", false);
       }
+      this.commit("orderCreate/watchStep");
     });
   },
   cartTotalPrice(state) {
@@ -56,6 +57,7 @@ const mutations = {
       return total + parseInt(sku.goods_number);
     }, 0);
   },
+
   initParam(state) {
     state.param.start = 0;
     state.param.query_name = "";
@@ -72,34 +74,8 @@ const mutations = {
     clearOrderSkuList();
     this.commit("usedSkuList/cartTotalPrice");
     this.commit("usedSkuList/cartTotalCount");
+    this.commit("orderCreate/watchStep");
     state.skuList.find(sku => sku.goods_number = 0);
-  },
-
-  deleteSku(state, id) {
-    let orderSkuList = getOrderSkuList().filter(item => item.id !== id);
-    setOrderSkuList(orderSkuList);
-    this.commit("usedSkuList/cartTotalPrice");
-  },
-  editSku(state, sku) {
-    let orderSkuList = getOrderSkuList();
-    orderSkuList.find(item => {
-      if (item.id === sku.id) {
-        item = Object.assign(item, sku);
-      }
-    });
-    setOrderSkuList(orderSkuList);
-    this.commit("usedSkuList/cartTotalPrice");
-  },
-  addOrderSku(state, { sku, goods_number }) {
-    sku.goods_number = goods_number;
-    let orderSkuList = getOrderSkuList();
-    if (orderSkuList) {
-      orderSkuList.push(sku);
-    } else {
-      orderSkuList = [sku];
-    }
-    setOrderSkuList(orderSkuList);
-    this.commit("usedSkuList/cartTotalPrice");
   },
 
   setSkuList(state, skuList) {
@@ -109,7 +85,7 @@ const mutations = {
       for (let i = 0; i < orderSkuList.length; i++) {
         for (let j = 0; j < skuList.length; j++) {
           if (orderSkuList[i].id === skuList[j].id) {
-            skuList[j] = orderSkuList[i];
+            skuList[j].goods_number = orderSkuList[i].goods_number;
           }
         }
       }

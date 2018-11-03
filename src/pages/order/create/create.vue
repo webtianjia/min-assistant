@@ -119,10 +119,8 @@
             state.sender.phoneStr = formatPhone(state.sender.phone);
           }
           return state.sender;
-        }
-      }),
-      ...mapState("usedSkuList", {
-        cartTotalPrice: "cartTotalPrice"
+        },
+        step: "step"
       }),
       hasSubmit() {
         return this.consignee && this.sender && this.cardSkuList.length > 0;
@@ -134,9 +132,7 @@
         getDefault: "getDefault"
       }),
       ...mapMutations("orderCreate", {
-        initOrderData: "initOrderData"
-      }),
-      ...mapMutations("usedSkuList", {
+        initOrderData: "initOrderData",
         deleteSku: "deleteSku"
       }),
       submitOrder() {
@@ -208,13 +204,15 @@
         });
       }
     },
-    mounted() {
-      this.getDefault();
-    },
     watch: {
-      cartTotalPrice() {
+      step(value) {
+        console.log(value)
         this.cardSkuList = getOrderSkuList();
       }
+    },
+    mounted() {
+      this.initOrderData();
+      this.getDefault();
     },
     onUnload() {
       if (this.$options.data) {

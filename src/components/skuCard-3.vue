@@ -11,8 +11,8 @@
       </div>
       <span class="qty-control">x{{sku.goods_number}}</span>
       <div class="icon-control">
-        <i class="icon icon-del" @click="deleteConfirm(index)"></i>
-        <i class="icon icon-edit" @click="editSku(sku,index)"></i>
+        <i class="icon icon-del" @click="deleteConfirm(sku.id)"></i>
+        <i class="icon icon-edit" @click="editSku(sku)"></i>
       </div>
     </div>
   </div>
@@ -32,14 +32,11 @@
       }
     },
     methods: {
-      changeQty(value) {
-        this.$emit("changeQty", { index: this.index, value });
-      },
-      deleteConfirm(index) {
-        this.$emit("deleteConfirm", index);
+      deleteConfirm(id) {
+        this.$emit("deleteConfirm", id);
       },
       editSku(sku, index) {
-        this.$emit("editSku", sku, index);
+        this.$emit("editSku", sku);
       }
     }
   };

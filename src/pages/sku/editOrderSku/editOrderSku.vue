@@ -4,25 +4,25 @@
       <div class="form-horizontal">
         <div class="form-group">
           <label class="label">商品名称</label>
-          <input name="skuName" :disabled="isUpdate" v-model="sku.goods_name" class="form-control"
+          <input name="skuName" v-model="sku.goods_name" class="form-control"
                  placeholder-style="color:#9e9e9e;"
                  placeholder="请输入商品名称">
         </div>
         <div class="form-group">
           <label class="label">商品品牌</label>
-          <input name="skuBrand" :disabled="isUpdate" v-model="sku.goods_brand" class="form-control"
+          <input name="skuBrand" v-model="sku.goods_brand" class="form-control"
                  placeholder-style="color:#9e9e9e;"
                  placeholder="请输入商品名称">
         </div>
         <div class="form-group">
           <label class="label">规格型号</label>
-          <input name="skuPic" :disabled="isUpdate" v-model="sku.goods_standard" class="form-control"
+          <input name="skuPic" v-model="sku.goods_standard" class="form-control"
                  placeholder-style="color:#9e9e9e;"
                  placeholder="请输入规格型号，如：500g">
         </div>
         <div class="form-group">
           <label class="label">商品单价</label>
-          <input name="price" :disabled="isUpdate" v-model="sku.goods_price" type="digit" class="form-control"
+          <input name="price" v-model="sku.goods_price" type="digit" class="form-control"
                  placeholder-style="color:#9e9e9e;"
                  placeholder="请输入商品单价RMB">
         </div>
@@ -59,15 +59,15 @@
       };
     },
     methods: {
-      ...mapMutations("usedSkuList", {
-        addOrderSku: "addOrderSku",
-        editSku: "editSku"
+      ...mapMutations("orderCreate", {
+        orderCreateAddSku: "addSku",
+        orderCreateUpdateSku: "updateSku"
       }),
       ...mapMutations("orderEdit", {
-        orderEditAddSku: "addSku",
-        orderEditUpdateSku: "updateSku"
+        orderUpdateAddSku: "addSku",
+        orderUpdateUpdateSku: "updateSku"
       }),
-      ...mapActions("usedSkuList", {
+      ...mapActions("editSku", {
         addSku: "addSku"
       }),
       formSubmit(event) {
@@ -79,28 +79,26 @@
           });
         } else {
           if (this.isUpdate) {
-            /*修改*/
             if (this.sku.updateOrder) {
-              this.orderEditUpdateSku(this.sku)
+              this.orderUpdateUpdateSku(this.sku);
             } else {
-              this.editSku(this.sku);
+
+              this.orderCreateUpdateSku(this.sku);
             }
             this.$router.back();
           } else {
-            /*添加*/
-            if (this.$mp.query.updateOrder) {
-              this.orderEditAddSku(this.sku);
-              this.$router.back();
-            } else {
-              this.addSku(this.sku).then(response => {
-                if (response.success) {
-                  this.addOrderSku({ sku: response.data, goods_number: this.sku.goods_number });
-                  this.$router.back();
+            this.addSku(this.sku).then(response => {
+              if (response.success) {
+                if (this.$mp.query.updateOrder) {
+                  this.orderUpdateAddSku({ sku: response.data, goods_number: this.sku.goods_number });
+                } else {
+                  this.orderCreateAddSku({ sku: response.data, goods_number: this.sku.goods_number });
                 }
-              }).catch(error => {
-                console.log("添加商品出错", error);
-              });
-            }
+                this.$router.back();
+              }
+            }).catch(error => {
+              console.log("添加商品出错", error);
+            });
           }
         }
       }
