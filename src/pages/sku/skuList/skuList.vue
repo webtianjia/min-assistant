@@ -78,7 +78,9 @@
     },
     onShow() {
       this.initParam();
-      this.$refs.searchBar.clear();
+      if(this.$refs.searchBar){
+        this.$refs.searchBar.clear();
+      }
       this.getSkuList();
     },
     onReachBottom() {
