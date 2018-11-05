@@ -116,7 +116,8 @@
           },
           qty: {
             required: true,
-            number: true
+            number: true,
+            min:1
           },
           price: {
             required: true,
@@ -135,7 +136,8 @@
           },
           qty: {
             required: "请输入商品数量",
-            number: "请输入正确商品数量"
+            number: "请输入正确商品数量",
+            min:"数量最少为1"
           },
           price: {
             required: "请输入商品单价"

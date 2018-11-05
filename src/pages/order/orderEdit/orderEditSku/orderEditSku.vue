@@ -53,11 +53,10 @@
           }
         });
       },
-      editSku(sku,index){
+      editSku(sku){
         this.goTo("/pages/sku/editOrderSku/main",{
           updateOrder:true,
-          ...sku,
-          index:index
+          ...sku
         })
       },
       goTo(url, data) {
@@ -67,6 +66,15 @@
             data: JSON.stringify(data)
           }
         });
+      }
+    },
+    onUnload() {
+      if (this.$options.data) {
+        Object.assign(this.$data, this.$options.data());
+      }
+      this._watchers = [];
+      if (this._watcher && this._watcher.teardown) {
+        this._watcher.teardown();
       }
     }
   };

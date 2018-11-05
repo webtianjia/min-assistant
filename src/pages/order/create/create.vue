@@ -5,7 +5,7 @@
     </div>
     <div style="margin-top:54px"></div>
     <split></split>
-    <div class="address-card" @click="goTo('/pages/sender/senderList/main?fromOrder=true')">
+    <div class="address-card" @click="goTo('/pages/sender/senderList/main?createOrder=true')">
       <div class="card-left">
         <i class="icon icon-sender"></i>
       </div>
@@ -27,7 +27,7 @@
       </div>
     </div>
     <split></split>
-    <div class="address-card" @click="goTo('/pages/consignee/consigneeList/main?fromOrder=true')">
+    <div class="address-card" @click="goTo('/pages/consignee/consigneeList/main?createOrder=true')">
       <div class="card-left">
         <i class="icon icon-addressee"></i>
       </div>

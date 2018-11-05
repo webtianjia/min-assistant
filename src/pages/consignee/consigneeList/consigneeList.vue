@@ -95,7 +95,7 @@
         });
       },
       setOrderConsignee(consignee) {
-        if (this.$mp.query.fromOrder) {
+        if (this.$mp.query.createOrder) {
           this.setConsignee(consignee);
           this.$router.back()
         }

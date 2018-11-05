@@ -3,7 +3,7 @@ import utils from "./utils.js";
 
 const fly = new Fly();
 fly.config.baseURL = utils.path;
-fly.config.timeout = 3000;
+fly.config.timeout = 5000;
 fly.config.method = "POST";
 //添加请求拦截器
 fly.interceptors.request.use((request) => {

@@ -74,7 +74,7 @@
         setSender: "setSender"
       }),
       setOrderSender(sender) {
-        if (this.$mp.query.fromOrder) {
+        if (this.$mp.query.createOrder) {
           this.setSender(sender);
           this.$router.back();
         }
