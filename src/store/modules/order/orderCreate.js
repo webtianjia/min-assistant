@@ -23,6 +23,8 @@ const mutations = {
   },
   initOrderData(state) {
     state.consignee = null;
+    clearOrderSkuList();
+    this.commit("orderCreate/watchStep");
   },
 
   /*修改商品*/
