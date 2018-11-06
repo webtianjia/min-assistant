@@ -1,7 +1,7 @@
 const ajaxUrl =
   process.env.NODE_ENV === "development"
     ? "https://apptest.xiaomiqiu.com/transport/app"
-    : "https://wx.geek.xiuex.com";
+    : "https://apptest.xiaomiqiu.com/transport/app";
 
 export default {
   path: ajaxUrl,
