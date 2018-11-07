@@ -3,7 +3,7 @@ function formatStatus(status) {
     case "create":
       return "未收货";
     case "close":
-      return "已完结";
+      return "已关闭";
     case "income":
       return "运输中";
     case "shipmented":
