@@ -8,7 +8,7 @@
         <li class="item" :class="{active:orderDetail.statusStr==='运输中'}">
           <span class="text">运输中</span>
         </li>
-        <li class="item" :class="{active:orderDetail.statusStr==='已完结'}">
+        <li class="item" :class="{active:orderDetail.statusStr==='已完结'||orderDetail.statusStr==='已关闭'}">
           <span class="text">已完结</span>
         </li>
       </ul>

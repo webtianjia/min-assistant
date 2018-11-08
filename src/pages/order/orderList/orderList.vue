@@ -119,6 +119,8 @@
       }),
       changeTabs(item) {
         this.initParam();
+        this.$mp.query.data=null;
+        console.log(formatStatusText(item))
         this.changeStatus(formatStatusText(item));
         this.getOrderList();
       },
@@ -159,16 +161,10 @@
       this.initParam();
       let param = this.$mp.query.data;
       if (param) {
-        this.navSelected = formatStatus(param);
-        param = param === "all" ? "" : param;
-        this.changeStatus(param);
-        this.getOrderList();
+        this.navSelected = param;
+        this.changeStatus(formatStatusText(param));
       }
-      /*      if (this.$refs.timeDown) {
-              this.$refs.timeDown.forEach((item) => {
-                item.start();
-              });
-            }*/
+      this.getOrderList();
     },
     onReachBottom() {
       if (this.isNoDataBottom) {

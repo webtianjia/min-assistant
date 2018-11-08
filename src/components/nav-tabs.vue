@@ -15,10 +15,7 @@
         default: "#fff"
       },
       tabs: [Array],
-      selected: {
-        type: String,
-        default: "全部"
-      }
+      selected: {type: String }
     },
     data() {
       return {

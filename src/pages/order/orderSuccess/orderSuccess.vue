@@ -20,7 +20,7 @@
       </div>
       <a class="btn active mt-25" href="/pages/order/create/main" open-type="switchTab"><span
         class="text">继续寄件</span></a>
-      <div class="btn mt-15" @click="goTo('/pages/order/orderList/main?data=create')"><span class="text">我的包裹</span></div>
+      <a class="btn mt-15" href="/pages/user/main" open-type="switchTab"><span class="text">我的包裹</span></a>
     </div>
   </div>
 </template>

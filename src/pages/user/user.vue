@@ -9,19 +9,19 @@
       </div>
     </div>
     <ul class="nav">
-      <li class="nav-item" @click="goTo('/pages/order/orderList/main?data=create')">
+      <li class="nav-item" @click="goTo('/pages/order/orderList/main?data=未收货')">
         <i class="icon i-1"></i>
         <span class="text">未收货</span>
       </li>
-      <li class="nav-item" @click="goTo('/pages/order/orderList/main?data=income')">
+      <li class="nav-item" @click="goTo('/pages/order/orderList/main?data=运输中')">
         <i class="icon i-2"></i>
         <span class="text">运输中</span>
       </li>
-      <li class="nav-item" @click="goTo('/pages/order/orderList/main?data=close')">
+      <li class="nav-item" @click="goTo('/pages/order/orderList/main?data=已完结')">
         <i class="icon i-3"></i>
         <span class="text">已完结</span>
       </li>
-      <li class="nav-item" @click="goTo('/pages/order/orderList/main?data=all')">
+      <li class="nav-item" @click="goTo('/pages/order/orderList/main?data=全部')">
         <!--<badge value="99"></badge>-->
         <i class="icon i-4"></i>
         <span class="text">全部订单</span>
