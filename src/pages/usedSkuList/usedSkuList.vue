@@ -66,6 +66,7 @@
         setSettlementStatus: "setSettlementStatus",
         pushProductToCart: "pushProductToCart",
         initParam: "initParam",
+        setQueryName:"setQueryName",
         changeStart: "changeStart"
       }),
       ...mapActions("usedSkuList", {
@@ -85,6 +86,7 @@
         }
       },
       searchSku(value) {
+        this.initParam();
         this.setQueryName(value);
         this.getSkuList();
       }
