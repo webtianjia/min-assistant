@@ -22,7 +22,7 @@
 
   .line {
     margin: 0 15px;
-    height: 1rpx;
+    height: 1px;
     background: #e6e6e6;
   }
 

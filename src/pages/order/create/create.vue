@@ -1,10 +1,21 @@
 <template>
   <div class="container">
-    <div class="order-no header-fixed">
-      <input-code ref="inputCode" @change="setNumber" placeholder="扫描或输入西游标签跟踪号"></input-code>
+
+    <div class=" header-fixed">
+      <div class="address-link" @click="goTo('/pages/systemReceiving/main')">
+        <div class="wrapper">
+          <i class="icon icon-address"></i>
+          <span class="text">查看所有收货点</span>
+        </div>
+        <i class="icon icon-right"></i>
+      </div>
+      <split></split>
+      <div class="order-no">
+        <input-code ref="inputCode" @change="setNumber" placeholder="扫描或输入西游标签跟踪号"></input-code>
+      </div>
     </div>
-    <div style="margin-top:54px"></div>
-    <split></split>
+    <div style="margin-top:96px"></div>
+    <div class="line" style="margin: 0"></div>
     <div class="address-card" @click="goTo('/pages/sender/senderList/main?createOrder=true')">
       <div class="card-left">
         <i class="icon icon-sender"></i>
@@ -26,7 +37,7 @@
         <i class="icon icon-card"></i>
       </div>
     </div>
-    <split></split>
+    <div class="line"></div>
     <div class="address-card" @click="goTo('/pages/consignee/consigneeList/main?createOrder=true')">
       <div class="card-left">
         <i class="icon icon-addressee"></i>
@@ -166,8 +177,8 @@
                   data: JSON.stringify(response.data)
                 }
               });
-            }else {
-              this.$mptoast(`${response.msg}`,"error")
+            } else {
+              this.$mptoast(`${response.msg}`, "error");
             }
           }).catch(error => {
             console.log("创建订单出错", error);
@@ -208,7 +219,7 @@
     },
     watch: {
       step(value) {
-        console.log(...value)
+        console.log(...value);
         this.cardSkuList = getOrderSkuList();
       }
     },
@@ -229,12 +240,41 @@
 </script>
 
 <style scoped lang="less">
+  .address-link {
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #4ab6f7;
+    padding: 0 15px;
+    .icon-address {
+      width: 19px;
+      height: 19px;
+      background: data-uri("../../../../static/img/i-address-3.png") no-repeat center;
+      background-size: cover;
+    }
+    .icon-right {
+      width: 11px;
+      height: 12px;
+      background: data-uri("../../../../static/img/i-right-fff.png") no-repeat center;
+      background-size: cover;
+    }
+    .wrapper {
+      display: flex;
+      align-items: center;
+      .text {
+        margin-left: 10px;
+        font-size: 13px;
+        color: #fff;
+      }
+    }
+  }
+
   .order-no {
     padding: 10px 15px;
     box-sizing: border-box;
     background: #fff;
   }
-
 
   .address-card {
     display: flex;
@@ -344,7 +384,7 @@
       flex-flow: column;
       justify-content: center;
       margin-top: 20px;
-      min-height: 145px;
+      min-height: 105px;
       .sku-item {
         display: flex;
         align-items: center;
