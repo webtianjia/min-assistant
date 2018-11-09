@@ -49,7 +49,7 @@ const mutations = {
   },
   cartTotalPrice(state) {
     state.cartTotalPrice = getOrderSkuList().reduce((total, sku) => {
-      return total + parseInt(sku.goods_price) * parseInt(sku.goods_number);
+      return total + parseFloat(sku.goods_price) * parseFloat(sku.goods_number);
     }, 0);
   },
   cartTotalCount(state) {

@@ -10,13 +10,13 @@
         </div>
         <div class="form-group">
           <label class="label">商品品牌</label>
-          <input name="skuBrand" :disabled="isUpdate"  v-model="sku.goods_brand" class="form-control"
+          <input name="skuBrand" :disabled="isUpdate" v-model="sku.goods_brand" class="form-control"
                  placeholder-style="color:#9e9e9e;"
                  placeholder="请输入商品名称">
         </div>
         <div class="form-group">
           <label class="label">规格型号</label>
-          <input name="skuPic" :disabled="isUpdate"  v-model="sku.goods_standard" class="form-control"
+          <input name="skuPic" :disabled="isUpdate" v-model="sku.goods_standard" class="form-control"
                  placeholder-style="color:#9e9e9e;"
                  placeholder="请输入规格型号，如：500g">
         </div>
@@ -117,11 +117,13 @@
           qty: {
             required: true,
             number: true,
-            min:1
+            min: 1,
+            max:999
           },
           price: {
             required: true,
-            number: true
+            number: true,
+            minNumber: true
           }
         };
         const messages = {
@@ -137,13 +139,17 @@
           qty: {
             required: "请输入商品数量",
             number: "请输入正确商品数量",
-            min:"数量最少为1"
+            min: "数量最少为1",
+            max:"数量最多999"
           },
           price: {
             required: "请输入商品单价"
           }
         };
         Validate = new WxValidate(rules, messages);
+        Validate.addMethod("minNumber", (value, param) => {
+          return /^[0-9]+([.]{1}[0-9]{1,2})?$/.test(value);
+        }, "小数点后最多为两位");
       }
     },
     mounted() {

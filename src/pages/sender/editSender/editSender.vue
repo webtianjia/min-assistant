@@ -17,12 +17,12 @@
           <input name="senderAddr" v-model="sender.address" class="form-control" placeholder-style="color:#9e9e9e;"
                  placeholder="请输入详细地址，不少于5个汉字">
         </div>
-        <div class="card-passport " :class="{'file-passport':!sender.senderPassport}" @click="chooseImage">
+<!--        <div class="card-passport " :class="{'file-passport':!sender.senderPassport}" @click="chooseImage">
           <div class="clear" @click.stop="sender.senderPassport=''" v-show="sender.senderPassport"></div>
           <img @click.stop="handleImagePreview" :style="{width:imgWidth+'rpx',height:imgHeight+'rpx'}"
                class="file-passport-img" :src="sender.senderPassport" @load="imageLoad" v-show="sender.senderPassport">
           <span class="text" v-show="!sender.senderPassport">上传护照</span>
-        </div>
+        </div>-->
         <button class="btn" form-type='submit' :class="{active:hasSubmit}"><span class="text">保存</span></button>
       </div>
     </form>

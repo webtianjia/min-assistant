@@ -120,7 +120,6 @@
       changeTabs(item) {
         this.initParam();
         this.$mp.query.data=null;
-        console.log(formatStatusText(item))
         this.changeStatus(formatStatusText(item));
         this.getOrderList();
       },

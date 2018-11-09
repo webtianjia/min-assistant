@@ -48,7 +48,7 @@
           goods_standard: "",
           goods_price: ""
         },
-        isUpdate:false
+        isUpdate: false
       };
     },
     methods: {
@@ -85,7 +85,8 @@
           },
           price: {
             required: true,
-            number: true
+            number: true,
+            minNumber: true
           }
         };
         const messages = {
@@ -103,6 +104,9 @@
           }
         };
         Validate = new WxValidate(rules, messages);
+        Validate.addMethod("minNumber", (value, param) => {
+          return /^[0-9]+([.]{1}[0-9]{1,2})?$/.test(value);
+        }, "小数点后最多为两位");
       }
     },
     mounted() {

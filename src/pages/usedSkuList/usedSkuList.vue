@@ -53,7 +53,9 @@
       ...mapState("usedSkuList", {
         settlementDialogStatus: "settlementDialogStatus",
         skuList: "skuList",
-        cartTotalPrice: "cartTotalPrice",
+        cartTotalPrice:state=>{
+          return state.cartTotalPrice.toFixed(2)
+        },
         cartTotalCount: "cartTotalCount"
       }),
       ...mapGetters("usedSkuList", {

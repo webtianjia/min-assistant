@@ -208,7 +208,7 @@
     },
     watch: {
       step(value) {
-        console.log(value)
+        console.log(...value)
         this.cardSkuList = getOrderSkuList();
       }
     },
@@ -234,6 +234,7 @@
     box-sizing: border-box;
     background: #fff;
   }
+
 
   .address-card {
     display: flex;
