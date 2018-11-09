@@ -18,9 +18,11 @@
             <i class="icon icon-time"></i>
             <span class="text">营业时间：{{systemReceiving.business_time}}</span>
           </div>
-          <div class="card-item">
-            <i class="icon icon-desc"></i>
-            <span class="text">业务说明：{{systemReceiving.explain_desc}}</span>
+          <div class="card-item" style="align-items: left">
+            <span style=" white-space: nowrap;display: flex;align-items: center"> <i class="icon icon-desc"></i><span>业务说明：</span></span>
+            <div class="text" >
+              <span  v-html="systemReceiving.explain_desc"></span>
+            </div>
           </div>
         </div>
       </div>
