@@ -12,7 +12,7 @@
           <label class="label">商品品牌</label>
           <input name="skuBrand" :disabled="isUpdate" v-model="sku.goods_brand" class="form-control"
                  placeholder-style="color:#9e9e9e;"
-                 placeholder="请输入商品名称">
+                 placeholder="请输入商品品牌">
         </div>
         <div class="form-group">
           <label class="label">规格型号</label>

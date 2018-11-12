@@ -59,10 +59,10 @@
       split,
       badge
     },
-    data(){
+    data() {
       return {
-        auth_code:""
-      }
+        auth_code: ""
+      };
     },
     methods: {
       goTo(url) {
@@ -72,8 +72,15 @@
       },
       setClipboardData(value) {
         wx.setClipboardData({
-          data: value
-        });
+            data: value,
+            success() {
+              wx.showToast({
+                title: "内容已复制",
+                icon: "none"
+              });
+            }
+          }
+        );
       },
       setAuthCode() {
         this.auth_code = wx.getStorageSync("auth_code");

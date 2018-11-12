@@ -63,7 +63,7 @@
         </div>
       </div>
       <div class="sku-list">
-        <div class="sku-item" v-for="sku in orderDetail.goodsList" :key="sku">
+        <div class="sku-item" v-for="sku in orderDetail.goodsList" :key="sku.id">
           <div class="sku-name text-overflow">{{sku.goods_name}}{{sku.goods_brand}}{{sku.goods_standard}}</div>
           <div class="sku-spc text-overflow">{{sku.goods_standard}}</div>
           <div class="sku-price text-overflow">￥{{sku.goods_price}}</div>
@@ -181,7 +181,6 @@
         color: #2e2e2e;
       }
     }
-
   }
 
   .address-card {
@@ -300,13 +299,13 @@
         font-size: 12px;
         position: relative;
         &:after {
-
           content: '';
           width: 100%;
           height: 1px;
           background: #e6e6e6;
           position: absolute;
           bottom: 0;
+          left: 0;
         }
         .sku-name {
           width: 84px;
