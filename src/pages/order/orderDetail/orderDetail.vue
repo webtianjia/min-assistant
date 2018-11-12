@@ -13,6 +13,11 @@
         </li>
       </ul>
     </div>
+    <div class="line" v-if="orderDetail.logistics_main && orderDetail.waybill_no"></div>
+    <div class="logistics" v-if="orderDetail.logistics_main && orderDetail.waybill_no">
+      <span class="title">{{orderDetail.logistics_main}}</span>
+      <span class="text">{{orderDetail.waybill_no}}</span>
+    </div>
     <split></split>
     <div class="package-card">
       <div class="card-item">
@@ -20,10 +25,6 @@
           <label class="label">包裹号</label>
           <span class="text">{{orderDetail.order_no}}</span>
         </div>
-        <!--<div class="time-wrapper">
-          <i class="icon icon-time"></i>
-          <span class="text time">16天12:00</span>
-        </div>-->
         <div v-if="orderDetail.suttle">
           <label class="label">重量</label>
           <span class="text">{{orderDetail.suttle}}kg</span>
@@ -148,6 +149,7 @@
 </script>
 
 <style scoped lang="less">
+
   .detail-status {
     height: 90px;
     width: 100%;
@@ -200,6 +202,20 @@
           }
         }
       }
+    }
+  }
+
+  .logistics {
+    height: 41px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    .title, .text {
+      font-size: 12px;
+      color: #2e2e2e;
+    }
+    .title{
+      margin-right: 10px;
     }
   }
 
