@@ -1,7 +1,5 @@
 {
   "pages": [
-
-
     "pages/order/create/main",
     "pages/consignee/editConsignee/main",
     "pages/sku/editOrderSku/main",

@@ -39,10 +39,9 @@
 </template>
 
 <script>
-  import { initData } from "../../../utils/index";
-  import { WxValidate } from "../../../utils/WxValidate";
+  import { initData ,showTotal} from "@/utils/index";
+  import { WxValidate } from "@/utils/WxValidate";
   import { mapMutations, mapActions } from "vuex";
-
   let Validate;
   export default {
     name: "editOrderSku",
@@ -82,10 +81,17 @@
             if (this.sku.updateOrder) {
               this.orderUpdateUpdateSku(this.sku);
             } else {
-
               this.orderCreateUpdateSku(this.sku);
             }
-            this.$router.back();
+            let that = this;
+            showTotal({
+              title: `操作成功`,
+              complete() {
+                setTimeout(() => {
+                  that.$router.back();
+                }, 500);
+              }
+            });
           } else {
             this.addSku(this.sku).then(response => {
               if (response.success) {
@@ -94,7 +100,15 @@
                 } else {
                   this.orderCreateAddSku({ sku: response.data, goods_number: this.sku.goods_number });
                 }
-                this.$router.back();
+                let that = this;
+                showTotal({
+                  title: `操作成功`,
+                  complete() {
+                    setTimeout(() => {
+                      that.$router.back();
+                    }, 500);
+                  }
+                });
               }
             }).catch(error => {
               console.log("添加商品出错", error);
@@ -158,7 +172,6 @@
         this.sku = Object.assign(this.sku, JSON.parse(param));
         this.isUpdate = true;
       } else {
-        initData(this.sku);
         this.isUpdate = false;
       }
       this.initValidate();

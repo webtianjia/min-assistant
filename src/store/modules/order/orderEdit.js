@@ -1,5 +1,4 @@
-import order from "../../../api/order/order";
-import Vue from "mpvue";
+import order from "@/api/order/order";
 
 const state = {
   orderDetail: null
@@ -19,7 +18,6 @@ const mutations = {
     state.orderDetail = orderDetail;
   },
   setConsignee(state, consignee) {
-    console.log(consignee);
     state.orderDetail.consignee = consignee.name;
     state.orderDetail.consignee_card_no = consignee.card_no;
     state.orderDetail.consignee_address = consignee.address;

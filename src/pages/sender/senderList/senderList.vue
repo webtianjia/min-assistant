@@ -22,7 +22,7 @@
           <p class="address">
             <span>{{sender.address}}</span>
           </p>
-          <div class="checked-wrapper" @click.stop="setDefault(sender.id)">
+          <div class="checked-wrapper" @click.stop="setDefaultSender(sender.id)">
             <i class="icon icon-checked" :class="{active:sender.is_default==='y'}"></i>
             <span class="text">默认地址</span>
           </div>
@@ -42,7 +42,7 @@
   import noData from "@/components/no-data";
 
   import { mapState, mapActions, mapGetters, mapMutations } from "vuex";
-  import { formatPhone } from "../../../utils/index";
+  import { formatPhone, showTotal } from "@/utils/index";
 
   export default {
     name: "senderList",
@@ -59,6 +59,9 @@
           });
           return state.senderList;
         }
+      }),
+      ...mapState("orderCreate", {
+        orderSender: "sender"
       })
     },
     methods: {
@@ -71,7 +74,8 @@
         updateOrderSender: "setSender"
       }),
       ...mapMutations("orderCreate", {
-        setSender: "setSender"
+        setSender: "setSender",
+        clearOrderSender: "clearOrderSender"
       }),
       setOrderSender(sender) {
         if (this.$mp.query.createOrder) {
@@ -90,7 +94,14 @@
           content: "是否确认删除该寄件人？",
           success(WXresponse) {
             if (WXresponse.confirm) {
-              that.deleteSender(id);
+              that.deleteSender(id).then(() => {
+                showTotal({
+                  title: `删除成功`
+                });
+              });
+              if (that.orderSender && id === that.orderSender.id) {
+                that.clearOrderSender();
+              }
             }
           }
         });
@@ -101,6 +112,13 @@
           query: {
             data: JSON.stringify(data)
           }
+        });
+      },
+      setDefaultSender(id) {
+        this.setDefault(id).then(() => {
+          showTotal({
+            title: `操作成功`
+          });
         });
       }
     },

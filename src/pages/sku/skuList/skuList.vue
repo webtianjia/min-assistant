@@ -29,6 +29,7 @@
   import noData from "@/components/no-data";
   import noDataBottom from "@/components/no-data-bottom";
   import { mapGetters, mapState, mapMutations, mapActions } from "vuex";
+  import { showTotal } from "@/utils/index";
 
   export default {
     name: "skuList",
@@ -50,6 +51,9 @@
         changeStart: "changeStart",
         setQueryName: "setQueryName"
       }),
+      ...mapMutations("orderCreate", {
+        deleteOrderSku: "deleteSku"
+      }),
       deleteConfirm(skuId) {
         let that = this;
         wx.showModal({
@@ -57,7 +61,14 @@
           content: "是否确认删除该商品？",
           success(WXresponse) {
             if (WXresponse.confirm) {
-              that.deleteSku(skuId);
+              that.deleteSku(skuId).then(() => {
+                showTotal({
+                  title: `删除成功`
+                });
+                that.initParam();
+                that.getSkuList();
+              });
+              that.deleteOrderSku(skuId);
             }
           }
         });
@@ -78,7 +89,7 @@
     },
     onShow() {
       this.initParam();
-      if(this.$refs.searchBar){
+      if (this.$refs.searchBar) {
         this.$refs.searchBar.clear();
       }
       this.getSkuList();

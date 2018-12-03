@@ -1,4 +1,4 @@
-import sku from "../../../api/sku/sku";
+import sku from "@/api/sku/sku";
 
 const state = {};
 

@@ -2,7 +2,7 @@
   <div class="number-control">
     <i class="icon icon-reduce " v-show="value>0" @click="handleChangeStep('reduce')"></i>
     <span class="text" v-show="value>0">{{value}}</span>
-    <i class="icon icon-plus" @click="handleChangeStep('plus')"></i>
+    <i class="icon icon-plus" @click="handleChangeStep('plus',$event)"></i>
   </div>
 </template>
 
@@ -44,7 +44,7 @@
       }
     },
     methods: {
-      handleChangeStep(type) {
+      handleChangeStep(type,e) {
         const { step, max, min } = this;
         let { value } = this;
         if (type === "reduce") {
@@ -53,10 +53,10 @@
           value = addNum(value, step);
         }
         if (value < min || value > max) return null;
-        this.handleEmit(value);
+        this.handleEmit(value,e);
       },
-      handleEmit(value) {
-        this.$emit("change",value);
+      handleEmit(value,e) {
+        this.$emit("change",value,e);
       }
     }
   };

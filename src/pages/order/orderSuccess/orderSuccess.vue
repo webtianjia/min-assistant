@@ -9,12 +9,6 @@
       <div class="code-img-wrapper">
         <canvas class="barcode" canvas-id="barcode"></canvas>
       </div>
-      <div class="info-text">
-      <!--  <span>识别码有效期还剩</span>
-        <time-down ref="timeDown" @time-end="timeEnd('结束了')" :textHot="true" endText="已失效"
-                   endTime="1539993600000"></time-down>
-        <span>，超时作废</span>-->
-      </div>
       <div class="package-no">
         包裹号:{{orderData.order_no}}
       </div>
@@ -27,23 +21,8 @@
 
 <script>
   import wxbarcode from "wxbarcode";
-  import timeDown from "@/components/timeDown";
-
   export default {
     name: "orderSuccess",
-    methods: {
-      goTo(url) {
-        wx.navigateTo({
-          url: url
-        });
-      },
-      timeEnd(value) {
-        console.log(value);
-      }
-    },
-    components: {
-      timeDown
-    },
     data(){
       return {
         orderData:null
@@ -53,17 +32,10 @@
       let param = this.$mp.query.data;
       if(param){
         this.orderData= Object.assign({}, JSON.parse(param));
-        //this.$refs.timeDown.start();
         wxbarcode.barcode("barcode", this.orderData.identification_code, 600, 150);
       }
     },
-    onShow() {
-      /*if (this.$refs.timeDown) {
-        this.$refs.timeDown.start();
-      }*/
-    },
     onUnload() {
-     // this.$refs.timeDown.end();
       if (this.$options.data) {
         Object.assign(this.$data, this.$options.data());
       }
@@ -72,9 +44,6 @@
         this._watcher.teardown();
       }
     },
-   /* onHide() {
-      this.$refs.timeDown.end();
-    }*/
   };
 </script>
 

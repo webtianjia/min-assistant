@@ -2,8 +2,8 @@
   <div class="sku-card" v-if="sku">
     <div class="sku-title text-overflow">{{sku.goods_name}}{{sku.goods_brand}}{{sku.goods_standard}}</div>
     <div class="controller">
-      <div>
-        <span class="sku-pic">{{sku.goods_standard}}</span>
+      <div style="display: flex;align-items: center">
+        <span class="sku-pic text-overflow">{{sku.goods_standard}}</span>
         <span class="sku-price">￥{{sku.goods_price}}</span>
       </div>
       <div class="controller-btn">
@@ -45,12 +45,13 @@
       color: #444;
     }
     .sku-pic {
-      margin-top: 10px;
       font-size: 11px;
       color: #9e9e9e;
+      width: 60px;
+      display: inline-block;
+      vertical-align: middle;
     }
     .sku-price {
-      margin-left: 40px;
       color: #2e2e2e;
     }
     .controller {

@@ -1,18 +1,3 @@
-<script>
-  import { mapActions } from "vuex";
-
-  export default {
-    methods: {
-      ...mapActions("login",{
-        login:"login"
-      })
-    },
-    created() {
-      this.login();
-    }
-
-  };
-</script>
 
 <style lang="less">
   .container {

@@ -33,9 +33,9 @@
 </template>
 
 <script>
-  import { WxValidate } from "../../../utils/WxValidate";
+  import { WxValidate } from "@/utils/WxValidate";
   import { mapActions } from "vuex";
-  import { initData } from "../../../utils/index";
+  import { showTotal } from "@/utils/index";
 
   let Validate;
   export default {
@@ -65,7 +65,15 @@
         } else {
           this.addSku(this.sku).then(response => {
             if (response.success) {
-              this.$router.back();
+              let that = this;
+              showTotal({
+                title: `操作成功`,
+                complete() {
+                  setTimeout(() => {
+                    that.$router.back();
+                  }, 500);
+                }
+              });
             }
           }).catch(error => {
             console.log("更新商品出错", error);
@@ -116,7 +124,6 @@
         this.isUpdate = true;
       } else {
         this.isUpdate = false;
-        initData(this.sku);
       }
       this.initValidate();
     },

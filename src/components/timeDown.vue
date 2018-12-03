@@ -18,12 +18,6 @@
         _interval: null
       };
     },
-    watch: {
-      endTime(value) {
-        console.log(value);
-
-      }
-    },
     methods: {
       timeDown() {
         const nowTime = new Date();

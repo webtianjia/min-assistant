@@ -8,7 +8,7 @@ export default {
     return fly.request("/order/getOrder", data);
   },
   getOrderCount: (data) => {
-    return fly.request("/order/count", data);
+    return fly.request("/order/getTotal", data);
   },
   addOrder: (data) => {
     return fly.request("/order/add", data);

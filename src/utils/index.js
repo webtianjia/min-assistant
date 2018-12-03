@@ -57,3 +57,12 @@ export default {
   formatIdCard,
   initData
 };
+
+
+export function showTotal(obj){
+  wx.showToast({
+    ...obj,
+    icon:"none"
+  })
+}
+

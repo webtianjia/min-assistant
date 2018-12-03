@@ -1,4 +1,4 @@
-import sku from "../../../api/sku/sku";
+import sku from "@/api/sku/sku";
 
 const state = {
   skuList: [],
@@ -55,8 +55,8 @@ const actions = {
       console.log("获取商品失败", error);
     });
   },
-  deleteSku({ commit }, id) {
-    sku.deleteSku({ id }).then(response => {
+  async deleteSku({ commit }, id) {
+    await   sku.deleteSku({ id }).then(response => {
       if (response.success) {
         commit("deleteSku", id);
       }

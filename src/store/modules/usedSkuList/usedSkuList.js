@@ -1,4 +1,4 @@
-import sku from "../../../api/sku/sku";
+import sku from "@/api/sku/sku";
 
 import { setOrderSkuList, getOrderSkuList, clearOrderSkuList } from "../../../utils/orderUtil";
 

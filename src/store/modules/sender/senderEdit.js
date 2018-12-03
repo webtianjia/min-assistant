@@ -1,4 +1,4 @@
-import sender from "../../../api/sender/sender";
+import sender from "@/api/sender/sender";
 
 const state = {};
 //getters

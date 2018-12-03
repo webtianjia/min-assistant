@@ -1,4 +1,4 @@
-import loginAPI from "../../../api/login/login";
+import loginAPI from "@/api/login/login";
 
 const state = {};
 //getters
@@ -14,17 +14,13 @@ const mutations = {
 
 // actions
 const actions = {
-  login({ commit }) {
-    wx.login({
-      success(WXresponse) {
-        loginAPI.login(WXresponse).then(response => {
-          if(response.success){
-            commit("setStorage", response.data);
-          }
-        }).catch(error => {
-          console.log("登录出错",error);
-        });
+  async login({ commit }, param) {
+    await  loginAPI.login(param).then(response => {
+      if (response.success) {
+        commit("setStorage", response.data);
       }
+    }).catch(error => {
+      console.log("登录出错", error);
     });
   }
 };

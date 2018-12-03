@@ -9,20 +9,23 @@
       </div>
     </div>
     <ul class="nav">
-      <li class="nav-item" @click="goTo('/pages/order/orderList/main?data=未收货')">
+      <li class="nav-item" @click="goTo('/pages/order/orderList/main','未收货')">
+        <badge :value="createTotal"></badge>
         <i class="icon i-1"></i>
         <span class="text">未收货</span>
       </li>
-      <li class="nav-item" @click="goTo('/pages/order/orderList/main?data=运输中')">
+      <li class="nav-item" @click="goTo('/pages/order/orderList/main','运输中')">
+        <badge :value="incomeTotal"></badge>
         <i class="icon i-2"></i>
         <span class="text">运输中</span>
       </li>
-      <li class="nav-item" @click="goTo('/pages/order/orderList/main?data=已完结')">
+      <li class="nav-item" @click="goTo('/pages/order/orderList/main','已完结')">
+        <badge :value="closeTotal"></badge>
         <i class="icon i-3"></i>
         <span class="text">已完结</span>
       </li>
-      <li class="nav-item" @click="goTo('/pages/order/orderList/main?data=全部')">
-        <!--<badge value="99"></badge>-->
+      <li class="nav-item" @click="goTo('/pages/order/orderList/main','全部')">
+        <badge :value="allTotal"></badge>
         <i class="icon i-4"></i>
         <span class="text">全部订单</span>
       </li>
@@ -42,16 +45,24 @@
         <i class="iconfont icon-right"></i>
       </li>
       <li class="list-group-item" style="margin-top: 25px">
-        <span class="text">打包授权码：{{auth_code}}</span>
-        <span class="copy" @click="setClipboardData(auth_code)"><span class="text">复制</span></span>
+        <span class="text">打包授权码：{{authCode}}</span>
+        <span class="copy" @click="setClipboardData(authCode)"><span class="box"><span
+          class="text">复制</span></span></span>
       </li>
     </ul>
+    <footer class="footer">
+      <i class="logo"></i>
+      <span class="text">西游科技 | 提供技术支持</span>
+    </footer>
   </div>
 </template>
 
 <script>
   import badge from "@/components/badge";
   import split from "@/components/split";
+  import { showTotal } from "@/utils/index";
+
+  import { mapState, mapActions, mapMutations } from "vuex";
 
   export default {
     name: "user",
@@ -59,38 +70,47 @@
       split,
       badge
     },
-    data() {
-      return {
-        auth_code: ""
-      };
+    computed: {
+      ...mapState("user", {
+        allTotal: state => state.orderCount.allTotal,
+        incomeTotal: state => state.orderCount.incomeTotal,
+        closeTotal: state => state.orderCount.closeTotal,
+        createTotal: state => state.orderCount.createTotal,
+        authCode:"authCode"
+      })
     },
     methods: {
-      goTo(url) {
-        wx.navigateTo({
-          url: url
+      ...mapActions("user", {
+        getOrderCount: "getOrderCount"
+      }),
+      ...mapMutations("user",{
+        setAuthCode:"setAuthCode"
+      }),
+      goTo(url, data) {
+        this.$router.push({
+          path: url,
+          query: {
+            data: data
+          }
         });
       },
       setClipboardData(value) {
         wx.setClipboardData({
             data: value,
             success() {
-              wx.showToast({
-                title: "内容已复制",
-                icon: "none"
+              showTotal({
+                title: `内容已复制`
               });
             }
           }
         );
       },
-      setAuthCode() {
-        this.auth_code = wx.getStorageSync("auth_code");
-      }
-    },
-    onShow() {
-
     },
     mounted() {
       this.setAuthCode();
+    },
+    onShow() {
+      this.getOrderCount();
     },
     onUnload() {
       if (this.$options.data) {
@@ -107,6 +127,27 @@
 <style scoped lang="less">
   .container {
     background: #f1f1f1;
+  }
+
+  .footer {
+    position: fixed;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .logo {
+      width: 37px;
+      height: 18px;
+      background: data-uri("../../../static/img/xy-logo.png") no-repeat center;
+      background-size: cover;
+      margin-right: 3px;
+    }
+    .text {
+      font-size: 10px;
+      color: #ccc;
+    }
   }
 
   .user-wrapper {
@@ -205,13 +246,17 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        .text {
+        .box {
           border: 1px solid #999;
           border-radius: 4px;
           width: 34px;
           height: 14px;
-          font-size: 10px;
-          text-align: center;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .text {
+            font-size: 10px;
+          }
         }
       }
     }

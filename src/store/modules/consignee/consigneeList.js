@@ -1,4 +1,4 @@
-import consignee from "../../../api/consignee/consignee";
+import consignee from "@/api/consignee/consignee";
 
 const state = {
   consigneeList: []
@@ -27,8 +27,8 @@ const actions = {
       console.log("获取收件人列表出错", error);
     });
   },
-  deleteConsignee({ commit }, id) {
-    consignee.deleteConsignee({ id }).then(response => {
+  async deleteConsignee({ commit }, id) {
+    await consignee.deleteConsignee({ id }).then(response => {
       if (response.success) {
         commit("deleteConsignee", id);
       }

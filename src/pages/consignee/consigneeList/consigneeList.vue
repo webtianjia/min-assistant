@@ -42,7 +42,7 @@
   import noData from "@/components/no-data";
 
   import { mapState, mapActions, mapMutations } from "vuex";
-  import { formatIdCard, formatPhone } from "../../../utils/index";
+  import { formatIdCard, formatPhone ,showTotal} from "@/utils/index";
 
   export default {
     name: "addresseeList",
@@ -60,6 +60,9 @@
           });
           return state.consigneeList;
         }
+      }),
+      ...mapState("orderCreate", {
+        orderConsignee: "consignee"
       })
     },
     methods: {
@@ -68,20 +71,27 @@
         deleteConsignee: "deleteConsignee"
       }),
       ...mapMutations("orderEdit", {
-        updateOrderConsignee:"setConsignee"
+        updateOrderConsignee: "setConsignee"
       }),
       ...mapMutations("orderCreate", {
-        setConsignee: "setConsignee"
+        setConsignee: "setConsignee",
+        clearOrderConsignee: "clearOrderConsignee"
       }),
       deleteConfirm(id) {
         let that = this;
-        console.log(id);
         wx.showModal({
           title: "提示",
           content: "是否确认删除该收件人？",
           success(WXresponse) {
             if (WXresponse.confirm) {
-              that.deleteConsignee(id);
+              that.deleteConsignee(id).then(()=>{
+                showTotal({
+                  title:`删除成功`
+                })
+              });
+              if (that.orderConsignee && id === that.orderConsignee.id) {
+                that.clearOrderConsignee();
+              }
             }
           }
         });
@@ -97,11 +107,11 @@
       setOrderConsignee(consignee) {
         if (this.$mp.query.createOrder) {
           this.setConsignee(consignee);
-          this.$router.back()
+          this.$router.back();
         }
-        if(this.$mp.query.updateOrder){
+        if (this.$mp.query.updateOrder) {
           this.updateOrderConsignee(consignee);
-          this.$router.back()
+          this.$router.back();
         }
       }
     },

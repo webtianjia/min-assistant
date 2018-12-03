@@ -1,16 +1,21 @@
-import systemReceiving from "../../../api/systemReceiving/systemReceiving";
+import systemReceiving from "@/api/systemReceiving/systemReceiving";
 
 const state = {
   systemReceivingList: [],
   param: {
     limit: 5,
     start: 0,
-    page: 1
+    page: 1,
+    receiving_country: ""
   },
-  total: 0
+  total: 0,
+  countryList: []
 };
 //getters
 const getters = {
+  activeTab: (state) => {
+    return state.param.receiving_country;
+  },
   isNoDataBottom: (state) => {
     if (state.total) {
       return (parseInt(state.total / state.param.limit) + 1) <= state.param.page;
@@ -25,12 +30,18 @@ const mutations = {
     state.param.page = 1;
     state.systemReceivingList = [];
   },
+  setCountry(state, value) {
+    state.param.receiving_country = value;
+  },
   changeStart(state) {
     state.param.page++;
     state.param.start = (state.param.page - 1) * state.param.limit;
   },
   setSystemReceivingList(state, systemReceivingList) {
     state.systemReceivingList.push(...systemReceivingList);
+  },
+  setCountryList(state, countryList) {
+    state.countryList = countryList;
   }
 };
 
@@ -44,6 +55,15 @@ const actions = {
       }
     }).catch(error => {
       console.log("获取收货点失败", error);
+    });
+  },
+  async getCountryList({ commit }) {
+    await  systemReceiving.getCountryList().then(response => {
+      if (response.success) {
+        commit("setCountryList", response.data);
+      }
+    }).catch(error => {
+      console.log("获取国家名单失败", error);
     });
   }
 };

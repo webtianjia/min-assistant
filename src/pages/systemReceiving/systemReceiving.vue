@@ -1,38 +1,52 @@
 <template>
   <div class="container">
-    <div v-for="systemReceiving in systemReceivingList" :key="systemReceiving.id">
-      <div class="location-card">
-        <div class="location-card-title">
-          <span class="text">{{systemReceiving.receiving_name}}</span>
-        </div>
-        <div class="location-card-body">
-          <div class="card-item">
-            <i class="icon icon-address-xs"></i>
-            <span class="text">{{systemReceiving.receiving_address}}</span>
-          </div>
-          <div class="card-item">
-            <i class="icon icon-phone"></i>
-            <span class="text">{{systemReceiving.contact_phone}}</span>
-          </div>
-          <div class="card-item">
-            <i class="icon icon-time"></i>
-            <span class="text">营业时间：{{systemReceiving.business_time}}</span>
-          </div>
-          <div class="card-item" style="align-items: left">
-            <span style=" white-space: nowrap;display: flex;align-items: center"> <i class="icon icon-desc"></i><span>业务说明：</span></span>
-            <div class="text" >
-              <span  v-html="systemReceiving.explain_desc"></span>
+    <div class="content">
+      <ul class="nav-tabs">
+        <li class="tab-item " :class="{active:!activeTab}" @click="changeTab('')">
+          <span class="text">全部 </span>
+        </li>
+        <li class="tab-item" :class="{active:activeTab===item.receiving_country}" v-for="item in countryList"
+            :key="item.id" @click="changeTab(item.receiving_country)">
+          <span class="text">{{item.receiving_country}}</span>
+        </li>
+      </ul>
+      <div class="systemReceivingList">
+        <div v-for="systemReceiving in systemReceivingList" :key="systemReceiving.id">
+          <div class="location-card">
+            <div class="location-card-title">
+              <span class="text">{{systemReceiving.receiving_name}}</span>
+            </div>
+            <div class="location-card-body">
+              <div class="card-item">
+                <i class="icon icon-address-xs"></i>
+                <span class="text">{{systemReceiving.receiving_address}}</span>
+              </div>
+              <div class="card-item">
+                <i class="icon icon-phone"></i>
+                <span class="text">{{systemReceiving.contact_phone}}</span>
+              </div>
+              <div class="card-item">
+                <i class="icon icon-time"></i>
+                <span class="text">营业时间：{{systemReceiving.business_time}}</span>
+              </div>
+              <div class="card-item">
+                <span style=" white-space: nowrap;display: flex;align-items: center"> <i
+                  class="icon icon-desc"></i><span>业务说明：</span></span>
+                <div class="text">
+                  <span v-html="systemReceiving.explain_desc"></span>
+                </div>
+              </div>
             </div>
           </div>
+          <split></split>
+        </div>
+        <div style="padding-top: 90px" v-if="systemReceivingList.length<=0">
+          <no-data type="no-receiving" text="暂无收货点信息"></no-data>
+        </div>
+        <div v-if="isNoDataBottom && systemReceivingList.length > 3">
+          <no-data-bottom></no-data-bottom>
         </div>
       </div>
-      <split></split>
-    </div>
-    <div style="padding-top: 90px" v-if="systemReceivingList.length<=0">
-      <no-data type="no-receiving" text="暂无收货点信息"></no-data>
-    </div>
-    <div v-if="isNoDataBottom && systemReceivingList.length > 3">
-      <no-data-bottom></no-data-bottom>
     </div>
 
   </div>
@@ -53,20 +67,31 @@
     },
     computed: {
       ...mapState("systemReceivingList", {
-        systemReceivingList: "systemReceivingList"
+        systemReceivingList: "systemReceivingList",
+        countryList: "countryList"
       }),
       ...mapGetters("systemReceivingList", {
-        isNoDataBottom: "isNoDataBottom"
+        isNoDataBottom: "isNoDataBottom",
+        activeTab: "activeTab"
       })
     },
     methods: {
       ...mapActions("systemReceivingList", {
-        getSystemReceivingList: "getSystemReceivingList"
+        getSystemReceivingList: "getSystemReceivingList",
+        getCountryList: "getCountryList"
       }),
       ...mapMutations("systemReceivingList", {
         initParam: "initParam",
-        changeStart: "changeStart"
-      })
+        changeStart: "changeStart",
+        setCountry: "setCountry"
+      }),
+      changeTab(value) {
+        if (value === this.activeTab) return;
+        this.initParam();
+        this.setCountry(value);
+
+        this.getSystemReceivingList();
+      }
     },
     onReachBottom() {
       if (this.isNoDataBottom) {
@@ -77,7 +102,9 @@
     },
     onShow() {
       this.initParam();
-      this.getSystemReceivingList();
+      this.getCountryList().then(() => {
+        this.getSystemReceivingList();
+      });
     },
     onUnload() {
       if (this.$options.data) {
@@ -92,6 +119,58 @@
 </script>
 
 <style scoped lang="less">
+  .content {
+    display: flex;
+    .nav-tabs {
+      flex: 0 0 80px;
+      width: 80px;
+      min-height: 100vh;
+      border-right: 1px solid #e6e6e6;
+      .tab-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f6f6f6;
+        border-bottom: 1px solid #e6e6e6;
+        width: 100%;
+        min-height: 40px;
+        position: relative;
+        transition: all .5s;
+        &:last-child {
+          border: none;
+        }
+        &:after {
+          content: '';
+          position: absolute;
+          right: -1px;
+          height: 100%;
+          width: 1px;
+          transition: all .5s;
+          transform: scaleY(0);
+        }
+        &.active {
+          background: #fff;
+          &:after {
+            background: #0790e3;
+            transform: scaleY(1);
+          }
+          .text {
+            color: #2e2e2e;
+          }
+        }
+        .text {
+          font-size: 14px;
+          color: #888;
+        }
+      }
+    }
+  }
+
+  .systemReceivingList {
+    min-height: 100vh;
+    width: 100%;
+  }
+
   .location-card {
     padding: 0 15px;
     .location-card-title {
@@ -118,7 +197,7 @@
       .card-item {
         margin-top: 8px;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         .icon {
           flex: 0 0 16px;
           width: 16px;

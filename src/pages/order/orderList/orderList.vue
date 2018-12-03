@@ -23,9 +23,13 @@
               <label class="label">识别码</label>
               <span class="text">{{order.identification_code}}</span>
             </div>
+            <div class="order-wrapper" v-if="order.package_number">
+              <label class="label">小面单号</label>
+              <span class="text">{{order.package_number}}</span>
+            </div>
           </div>
           <div class="card-item">
-            <div class="order-wrapper" style="align-items: normal">
+            <div class="order-wrapper">
               <label class="label">收件人</label>
               <div class="text">
                 <div>
@@ -44,7 +48,7 @@
           </div>
           <div class="card-item">
             <div class="order-wrapper">
-              <label class="label">最新状态</label>
+              <label class="label">新状态</label>
               <span class="text status">{{order.statusStr}}</span>
             </div>
             <div class="order-wrapper">
@@ -74,7 +78,7 @@
   import noDataBottom from "@/components/no-data-bottom";
 
   import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
-  import { formatPhone, formatIdCard } from "../../../utils/index";
+  import { formatPhone, formatIdCard, showTotal } from "@/utils/index";
   import { formatStatus, formatStatusText } from "../utils";
 
   export default {
@@ -119,7 +123,7 @@
       }),
       changeTabs(item) {
         this.initParam();
-        this.$mp.query.data=null;
+        this.$mp.query.data = null;
         this.changeStatus(formatStatusText(item));
         this.getOrderList();
       },
@@ -130,7 +134,13 @@
           content: "是否确认删除此订单？",
           success(WXresponse) {
             if (WXresponse.confirm) {
-              that.deleteOrder(id);
+              that.deleteOrder(id).then(() => {
+                showTotal({
+                  title: "删除成功"
+                });
+                that.initParam();
+                this.getOrderList();
+              });
             }
           }
         });
@@ -213,7 +223,8 @@
       }
       .order-wrapper {
         display: flex;
-        align-items: center;
+        align-items: left;
+        justify-content: center;
       }
       .label {
         color: #9e9e9e;

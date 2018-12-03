@@ -36,6 +36,12 @@
           <span class="text">{{orderDetail.identification_code}}</span>
         </div>
       </div>
+      <div class="card-item" v-if="orderDetail.package_number">
+        <div class="time-wrapper">
+          <label class="label">小面单号</label>
+          <span class="text">{{orderDetail.package_number}}</span>
+        </div>
+      </div>
     </div>
     <split></split>
     <div class="address-card">
@@ -65,8 +71,8 @@
           {{item.goods_standard}}
         </div>
         <div class="sku-wrapper">
-          <div>
-            <span class="sku-spc"> {{item.goods_standard}}</span>
+          <div style="display: flex;align-items: center">
+            <span class="sku-spc text-overflow"> {{item.goods_standard}}</span>
             <span class="sku-price"> ￥{{item.goods_price}}</span>
           </div>
           <div class="sku-qty">x{{item.goods_number}}</div>
@@ -85,18 +91,20 @@
           <i class=" icon icon-address"></i>
           <span class="text">{{orderDetail.xyReceivingPO.receiving_address}}</span>
         </p>
-        <p class="phone">
-          <i class="icon icon-phone"></i>
-          <span class="text">{{orderDetail.xyReceivingPO.contact_phone}}</span>
-        </p>
+        <!--       <p class="phone">
+                 <i class="icon icon-phone"></i>
+                 <span class="text">{{orderDetail.xyReceivingPO.contact_phone}}</span>
+               </p>-->
       </div>
     </div>
+    <canvas style="width: 100%; height: 336px;position: fixed;bottom: 200vh;right:200vh;background: #fff"
+            canvas-id="drawingCanvas"></canvas>
   </div>
 </template>
 
 <script>
   import split from "@/components/split";
-  import { formatIdCard, formatPhone } from "../../../utils/index";
+  import { formatIdCard, formatPhone } from "@/utils/index";
   import { formatStatus } from "../utils";
   import { mapActions, mapState } from "vuex";
 
@@ -104,7 +112,8 @@
     name: "orderDetail",
     data() {
       return {
-        active: false
+        active: false,
+        imageUrl: null
       };
     },
     computed: {
@@ -125,6 +134,85 @@
       }),
       toggleClass() {
         this.active = !this.active;
+      },
+      drawing(canvas, orderDetail) {
+        if (!orderDetail) return;
+        const context = wx.createCanvasContext(canvas);
+        const windowWidth = wx.getSystemInfoSync().windowWidth;
+        /*
+        * 订单
+        * */
+        context.setFillStyle("#fff");
+        context.fillRect(0, 0, windowWidth, 336);
+        context.globalCompositeOperation = "source-over";
+
+        context.setFillStyle("#29bbeb");
+        context.fillRect(0, 0, windowWidth, 110);
+        context.globalCompositeOperation = "source-over";
+        context.setFontSize(14);
+        context.setFillStyle("#fff");
+        context.setTextAlign("right");
+        context.fillText("包裹号", 88, 30, 88);
+        context.fillText("下单时间", 88, 60, 88);
+        if (orderDetail.logistics_main && orderDetail.waybill_no) {
+          context.fillText(orderDetail.logistics_main, 88, 90);
+        }
+        context.setTextAlign("left");
+        context.fillText(orderDetail.order_no, 108, 30);
+        context.fillText(orderDetail.create_time, 108, 60);
+
+        if (orderDetail.logistics_main && orderDetail.waybill_no) {
+          context.fillText(orderDetail.waybill_no, 108, 90);
+        }
+        /*
+        * 地址
+        * */
+        context.drawImage("../../../static/img/shareStatic/address-1.png", 20, 140, 22, 22);
+        context.setTextAlign("left");
+        context.setFillStyle("#2e2e2e");
+
+        context.fillText(`${orderDetail.consignee + "   " + orderDetail.consignee_phoneStr + "    " + orderDetail.consignee_card_noStr}`, 56, 148, windowWidth - 34);
+        context.fillText(`${    orderDetail.consignee_province + orderDetail.consignee_city + orderDetail.consignee_district + orderDetail.consignee_address}`, 56, 168, windowWidth - 56 - 22);
+
+        /*
+        * split
+        * */
+        context.setFillStyle("#f0f0f0");
+        context.fillRect(20, 189, windowWidth - 40, 12);
+
+        /*
+         * 收货点
+         * */
+        context.setFillStyle("#2e2e2e");
+        if (orderDetail.xyReceivingPO) {
+          context.fillText(orderDetail.xyReceivingPO.receiving_name, 20, 231, windowWidth - 20);
+
+          context.setFillStyle("#f0f0f0");
+          context.fillRect(20, 245, windowWidth - 40, 1);
+          context.setFillStyle("#2e2e2e");
+          context.drawImage("../../../static/img/shareStatic/address-2.png", 20, 259, 18, 18);
+          context.fillText(orderDetail.xyReceivingPO.receiving_address, 50, 273, windowWidth - 20);
+          /*
+                    context.drawImage("../../../static/img/shareStatic/phone.png", 20, 288, 18, 18);
+                    context.fillText(orderDetail.xyReceivingPO.contact_phone, 50, 301, windowWidth - 20);*/
+        }
+        let that = this;
+        context.draw(false,
+          setTimeout(function() {
+            wx.canvasToTempFilePath({
+              canvasId: canvas,
+              width: windowWidth,
+              fileType: "jpg",
+              height: 340,
+              success(res) {
+                that.imageUrl = res.tempFilePath;
+              },
+              fail: function(res) {
+
+              }
+            });
+          }, 1000)
+        );
       }
     },
     mounted() {
@@ -132,6 +220,22 @@
       if (param) {
         this.getOrder(param);
       }
+    },
+    watch: {
+      orderDetail(value) {
+        this.drawing("drawingCanvas", value);
+      }
+    },
+    onShareAppMessage(res) {
+      let imageUrl = this.imageUrl;
+      let id = this.orderDetail.id;
+      let title = this.orderDetail.statusStr;
+      if (!imageUrl) return false;
+      return {
+        title: `订单状态 : ${title}`,
+        path: "pages/order/orderDetail/main?data=" + id,
+        imageUrl: imageUrl
+      };
     },
     components: {
       split
@@ -146,6 +250,8 @@
       }
     }
   };
+
+
 </script>
 
 <style scoped lang="less">
@@ -214,7 +320,7 @@
       font-size: 12px;
       color: #2e2e2e;
     }
-    .title{
+    .title {
       margin-right: 10px;
     }
   }
@@ -308,8 +414,10 @@
         color: #9e9e9e;
         font-size: 11px;
       }
-      .sku-price {
-        margin-left: 20px;
+      .sku-spc {
+        width: 60px;
+        display: inline-block;
+        vertical-align: middle;
       }
       position: relative;
       &:last-child {

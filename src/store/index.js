@@ -18,12 +18,14 @@ import orderDetail from "./modules/order/orderDetail";
 import orderEdit from "./modules/order/orderEdit";
 
 import login from "./modules/login/login";
+import user from "./modules/user/user";
 
 Vue.use(Vuex);
 export default new Vuex.Store({
   modules: {
     usedSkuList,
     skuList,
+    editSku,
     consigneeList,
     consigneeEdit,
     senderList,
@@ -33,8 +35,8 @@ export default new Vuex.Store({
     orderCreate,
     orderDetail,
     orderEdit,
-    editSku,
-    login
+    login,
+    user
   }
 });
 

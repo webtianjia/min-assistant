@@ -1,5 +1,5 @@
 <template>
-  <div class="add-link" @click="goTo">
+  <div class="add-link" @click="goTo(path)">
     <div class="wrapper">
       <i class="icon icon-address"></i>
       <span class="text">{{title}}</span>
@@ -22,13 +22,14 @@
       }
     },
     methods: {
-      goTo() {
+      goTo(path) {
         this.$router.push({
-          path: this.path
+          path: path
         });
       }
     }
   };
+  
 </script>
 
 <style scoped lang="less">

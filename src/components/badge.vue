@@ -1,5 +1,5 @@
 <template>
-  <i class="badge">{{text}}</i>
+  <i class="badge" v-show="text">{{text}}</i>
 </template>
 
 <script>

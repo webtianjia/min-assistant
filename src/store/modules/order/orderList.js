@@ -1,4 +1,4 @@
-import order from "../../../api/order/order";
+import order from "@/api/order/order";
 
 const state = {
   orderList: [],
@@ -53,13 +53,13 @@ const actions = {
       console.log("获取订单列表失败", error);
     });
   },
-  deleteOrder({ commit }, id) {
-    order.deleteOrder({ id }).then(response => {
+  async deleteOrder({ commit }, id) {
+    await   order.deleteOrder({ id }).then(response => {
       if (response.success) {
         commit("deleteOrder", id);
       }
     }).catch(error => {
-      console.log("删除订单失败");
+      console.log("删除订单失败", error);
     });
   }
 };

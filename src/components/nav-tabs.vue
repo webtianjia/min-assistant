@@ -15,7 +15,7 @@
         default: "#fff"
       },
       tabs: [Array],
-      selected: {type: String }
+      selected: { type: String }
     },
     data() {
       return {
@@ -49,25 +49,29 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      position: relative;
       .text {
         font-size: 14px;
         color: #9e9e9e;
       }
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: 5px;
+        width: 35px;
+        height: 3px;
+        left: 50%;
+        transform: translateX(-50%) scaleX(0);
+        transition: transform .4s;
+        border-radius: 3px;
+      }
       &.active {
-        position: relative;
         .text {
           color: #2e2e2e;
         }
         &:after {
-          content: '';
-          position: absolute;
-          bottom: 5px;
-          width: 35px;
-          height: 3px;
-          left: 50%;
-          transform: translateX(-50%);
-          border-radius: 3px;
           background: #fe6d26;
+          transform: translateX(-50%) scaleX(1);
         }
       }
     }

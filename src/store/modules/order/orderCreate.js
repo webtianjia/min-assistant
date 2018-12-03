@@ -1,19 +1,19 @@
-import orderAPI from "../../../api/order/order";
-import senderAPI from "../../../api/sender/sender";
-import { getOrderSkuList, setOrderSkuList, clearOrderSkuList } from "../../../utils/orderUtil";
+import orderAPI from "@/api/order/order";
+import senderAPI from "@/api/sender/sender";
+import { getOrderSkuList, setOrderSkuList, clearOrderSkuList } from "@/utils/orderUtil";
 
 const state = {
   consignee: null,
   sender: null,
-  step:0
+  step: 0
 };
 //getters
 const getters = {};
 
 // mutations
 const mutations = {
-  watchStep(state){
-    state.step++
+  watchStep(state) {
+    state.step++;
   },
   setConsignee(state, consignee) {
     state.consignee = consignee;
@@ -21,12 +21,17 @@ const mutations = {
   setSender(state, sender) {
     state.sender = sender;
   },
-  initOrderData(state) {
-    state.consignee = null;
+  clearOrderConsignee(state) {
+    state.consignee=null
+  },
+  clearOrderSender(state) {
+    state.sender=null
+  },
+  initOrderData() {
     clearOrderSkuList();
+    this.commit("orderCreate/clearOrderConsignee");
     this.commit("orderCreate/watchStep");
   },
-
   /*修改商品*/
   updateSku(state, sku) {
     let orderSkuList = getOrderSkuList();

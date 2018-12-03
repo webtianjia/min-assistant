@@ -4,12 +4,15 @@
       {{sku.goods_name}}{{sku.goods_brand}}{{sku.goods_standard}}
     </div>
     <div class="card-item">
-      <div class="sku-pic text-overflow">{{sku.goods_standard}}</div>
-      <div class="sku-price">
-        <span>￥</span>
-        <span>{{sku.goods_price}}</span>
+      <div style="display: flex;align-items: center">
+        <div class="sku-pic text-overflow">{{sku.goods_standard}}</div>
+        <div class="sku-price">
+          <span>￥</span>
+          <span>{{sku.goods_price}}</span>
+        </div>
+        <span class="qty-control">x{{sku.goods_number}}</span>
       </div>
-      <span class="qty-control">x{{sku.goods_number}}</span>
+
       <div class="icon-control">
         <i class="icon icon-del" @click="deleteConfirm(sku.id)"></i>
         <i class="icon icon-edit" @click="editSku(sku)"></i>
@@ -61,7 +64,9 @@
       align-items: center;
       justify-content: space-between;
       .sku-pic {
-        width: 85px;
+        width: 60px;
+        display: inline-block;
+        vertical-align: middle;
         font-size: 13px;
         color: #9e9e9e;
       }
@@ -74,19 +79,19 @@
       }
       .icon-control{
         display: flex;
-      }
-      .icon {
-        justify-self: flex-start;
-        width: 38px;
-        height: 38px;
-        background: no-repeat center;
-        background-size: 19px;
-        &.icon-edit {
-          background-image: data-uri("../../static/img/i-edit.png");
-          background-position: right center;
-        }
-        &.icon-del {
-          background-image: url("../../static/img/i-del.png");
+        .icon {
+          justify-self: flex-start;
+          width: 38px;
+          height: 38px;
+          background: no-repeat center;
+          background-size: 19px;
+          &.icon-edit {
+            background-image: data-uri("../../static/img/i-edit.png");
+            background-position: right center;
+          }
+          &.icon-del {
+            background-image: url("../../static/img/i-del.png");
+          }
         }
       }
     }

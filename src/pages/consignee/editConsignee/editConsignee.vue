@@ -9,10 +9,10 @@
                  placeholder="请输入收件人姓名">
         </div>
         <div class="form-group">
-          <label class="label">手机电话</label>
+          <label class="label">手机号码</label>
           <input name="consigneePhone" v-model="consignee.phone" type="number" class="form-control"
                  placeholder-style="color:#9e9e9e;"
-                 placeholder="请输入收件人电话">
+                 placeholder="请输入11位大陆手机号码">
         </div>
         <div class="form-group">
           <label class="label">选择地区</label>
@@ -56,18 +56,15 @@
                            @onConfirm="onConfirm"></mpvue-city-picker>
       </div>
     </form>
-    <mptoast/>
   </div>
 </template>
 
 <script>
-  import { initData } from "../../../utils/index";
+  import { showTotal } from "@/utils/index";
   import { mapActions } from "vuex";
 
   import mpvueCityPicker from "mpvue-citypicker";
-  import mptoast from "mptoast";
-  import { WxValidate } from "../../../utils/WxValidate";
-
+  import { WxValidate } from "@/utils/WxValidate";
   let Validate;
 
   export default {
@@ -96,8 +93,7 @@
       }
     },
     components: {
-      mpvueCityPicker,
-      mptoast
+      mpvueCityPicker
     },
     methods: {
       ...mapActions("consigneeEdit", {
@@ -116,11 +112,21 @@
         if (this.hasSubmit) {
           if (!Validate.checkForm(event.mp)) {
             const error = Validate.errorList[0];
-            this.$mptoast(`${error.msg}`, "error");
+            showTotal({
+              title:`${error.msg}`
+            })
           } else {
             this.addConsignee(this.consignee).then(response => {
               if (response.success) {
-                this.$router.back();
+                let that=this;
+                showTotal({
+                  title:`操作成功`,
+                  complete(){
+                    setTimeout(()=>{
+                      that.$router.back();
+                    },500)
+                  }
+                })
               }
             }).catch(error => {
               console.log("修改出错", error);
@@ -180,7 +186,7 @@
           return check(value) === "OK";
         }, "身份证不合法");
       },
-      chooseImage(obj) {
+    /*  chooseImage(obj) {
         wx.chooseImage({
           sizeType: ["original", "compressed"],  //可选择原图或压缩后的图片
           sourceType: ["album", "camera"], //可选择性开放访问相册、相机
@@ -195,14 +201,12 @@
           current: 0,  //当前预览的图片
           urls: [path]  //所有要预览的图片
         });
-      }
+      }*/
     },
     mounted() {
       let param = this.$mp.query.data;
       if (param) {
         this.consignee = Object.assign(this.consignee, JSON.parse(param));
-      } else {
-        initData(this.consignee);
       }
       this.initValidate();
     },
@@ -344,7 +348,7 @@
     }
   }
 
-  .idCard-img {
+/*  .idCard-img {
     margin-top: 20px;
     display: flex;
     align-items: center;
@@ -385,7 +389,7 @@
         color: #2e2e2e;
       }
     }
-  }
+  }*/
 
   .btn {
     width: 320px;

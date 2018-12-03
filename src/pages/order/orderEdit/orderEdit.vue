@@ -81,7 +81,7 @@
   import split from "@/components/split";
   import noData from "@/components/no-data";
 
-  import { formatPhone, formatIdCard } from "../../../utils/index";
+  import { formatPhone, formatIdCard ,showTotal} from "@/utils/index";
   import { mapState, mapActions, mapMutations } from "vuex";
 
   import { getOrderSkuList, setOrderSkuList } from "../../../utils/orderUtil";
@@ -136,7 +136,15 @@
             goods: goodsList
           }).then(response => {
             if(response.success){
-              this.$router.back();
+              let that=this;
+              showTotal({
+                title:`修改成功`,
+                complete(){
+                  setTimeout(()=>{
+                    that.$router.back();
+                  },500)
+                }
+              })
             }
           }).catch(error => {
             console.log("修改订单失败", error);

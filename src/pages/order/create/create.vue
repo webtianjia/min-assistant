@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-
     <div class=" header-fixed">
       <div class="address-link" @click="goTo('/pages/systemReceiving/main')">
         <div class="wrapper">
@@ -11,7 +10,7 @@
       </div>
       <split></split>
       <div class="order-no">
-        <input-code ref="inputCode" @change="setNumber" placeholder="扫描或输入西游标签跟踪号"></input-code>
+        <input-code ref="inputCode" @change="setNumber" placeholder="扫描或输入小面单号"></input-code>
       </div>
     </div>
     <div style="margin-top:96px"></div>
@@ -88,7 +87,6 @@
     </div>
     <div class="submit-btn" :class="{active:hasSubmit}" @click="submitOrder"><span
       class="text">下单</span></div>
-    <mptoast/>
   </div>
 </template>
 
@@ -96,19 +94,16 @@
   import split from "@/components/split";
   import inputCode from "@/components/input-code";
   import noData from "@/components/no-data";
-
-  import mptoast from "mptoast";
-  import { formatPhone, formatIdCard } from "../../../utils/index";
+  import { formatPhone, formatIdCard ,showTotal} from "@/utils/index";
   import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
-  import { getOrderSkuList } from "../../../utils/orderUtil";
+  import { getOrderSkuList } from "@/utils/orderUtil";
 
   export default {
     name: "create",
     components: {
       split,
       inputCode,
-      noData,
-      mptoast
+      noData
     },
     data() {
       return {
@@ -138,6 +133,9 @@
       }
     },
     methods: {
+      ...mapActions("login", {
+        login: "login"
+      }),
       ...mapActions("orderCreate", {
         addOrder: "addOrder",
         getDefault: "getDefault"
@@ -178,7 +176,9 @@
                 }
               });
             } else {
-              this.$mptoast(`${response.msg}`, "error");
+              showTotal({
+                title:`${response.msg}`
+              })
             }
           }).catch(error => {
             console.log("创建订单出错", error);
@@ -217,15 +217,23 @@
         });
       }
     },
+    created() {
+      let that = this;
+      wx.login({
+        success(wxResponse) {
+          that.login(wxResponse).then(() => {
+            that.getDefault();
+          });
+        }
+      });
+    },
     watch: {
       step(value) {
-        console.log(...value);
         this.cardSkuList = getOrderSkuList();
       }
     },
     mounted() {
       this.initOrderData();
-      this.getDefault();
     },
     onUnload() {
       if (this.$options.data) {

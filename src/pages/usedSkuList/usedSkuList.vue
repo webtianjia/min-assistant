@@ -33,6 +33,8 @@
         <span class="text">确认添加</span>
       </div>
     </div>
+    <canvas style="position:fixed; width: 100%; height: 100%; left:0; top:0;" v-show="display_good_box"
+            canvas-id="myCanvas"></canvas>
   </div>
 </template>
 
@@ -44,6 +46,7 @@
   import noData from "@/components/no-data";
   import noDataBottom from "@/components/no-data-bottom";
 
+  import AddShopCar from "@/utils/AddShopCar";
 
   import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
 
@@ -53,8 +56,8 @@
       ...mapState("usedSkuList", {
         settlementDialogStatus: "settlementDialogStatus",
         skuList: "skuList",
-        cartTotalPrice:state=>{
-          return state.cartTotalPrice.toFixed(2)
+        cartTotalPrice: state => {
+          return state.cartTotalPrice.toFixed(2);
         },
         cartTotalCount: "cartTotalCount"
       }),
@@ -63,12 +66,17 @@
         isNoDataBottom: "isNoDataBottom"
       })
     },
+    data() {
+      return {
+        display_good_box: false
+      };
+    },
     methods: {
       ...mapMutations("usedSkuList", {
         setSettlementStatus: "setSettlementStatus",
-        pushProductToCart: "pushProductToCart",
+        pushProductToCart2: "pushProductToCart",
         initParam: "initParam",
-        setQueryName:"setQueryName",
+        setQueryName: "setQueryName",
         changeStart: "changeStart"
       }),
       ...mapActions("usedSkuList", {
@@ -91,11 +99,27 @@
         this.initParam();
         this.setQueryName(value);
         this.getSkuList();
+      },
+      pushProductToCart(value, e) {
+        this.pushProductToCart2(value);
+        if (e) {
+          this.touchOnGoods(e);
+        }
+      },
+      touchOnGoods(e) {
+        let finger = {
+          x: e.clientX,
+          y: e.clientY
+        };
+        AddShopCar.startAddShopAnimation([{
+          x: 60,
+          y: 750 * wx.getSystemInfoSync().windowHeight / wx.getSystemInfoSync().windowWidth - 50
+        }, finger], this);
       }
     },
     onShow() {
       this.initParam();
-      if(this.$refs.searchBar){
+      if (this.$refs.searchBar) {
         this.$refs.searchBar.clear();
       }
       this.getSkuList();
@@ -179,7 +203,6 @@
       position: relative;
       width: 100%;
       display: flex;
-      align-items: left;
       flex-flow: column;
       &:before {
         content: '';

@@ -28,8 +28,8 @@
       }
     },
     methods: {
-      changeQty(value) {
-        this.$emit("changeQty",{id:this.sku.id,value});
+      changeQty(value,e) {
+        this.$emit("changeQty",{id:this.sku.id,value},e);
       }
     }
   };
@@ -46,14 +46,13 @@
       color: #444;
     }
     .sku-pic {
-      max-width: 60px;
+      width: 60px;
       display: inline-block;
       vertical-align: middle;
       font-size: 11px;
       color: #9e9e9e;
     }
     .sku-price {
-      margin-left: 10px;
       font-size: 12px;
       color: #2e2e2e;
     }

@@ -1,4 +1,4 @@
-import order from "../../../api/order/order";
+import order from "@/api/order/order";
 
 const state = {
   orderDetail: null

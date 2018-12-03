@@ -1,4 +1,4 @@
-import consignee from "../../../api/consignee/consignee";
+import consignee from "@/api/consignee/consignee";
 
 const state = {};
 //getters
