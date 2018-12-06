@@ -1,9 +1,6 @@
 import sku from "@/api/sku/sku";
 
-import { setOrderSkuList, getOrderSkuList, clearOrderSkuList } from "../../../utils/orderUtil";
-
 const state = {
-  settlementDialogStatus: false,
   skuList: [],
   param: {
     limit: 5,
@@ -11,15 +8,10 @@ const state = {
     query_name: "",
     page: 1
   },
-  total: 0,
-  cartTotalPrice: 0,
-  cartTotalCount: 0
+  checkedSwitch: false
 };
 //getters
 const getters = {
-  cardSkuList: (state) => {
-    return state.skuList.filter(sku => sku.goods_number >= 1);
-  },
   isNoDataBottom: (state) => {
     if (state.total) {
       return (parseInt(state.total / state.param.limit) + 1) <= state.param.page;
@@ -29,38 +21,11 @@ const getters = {
 
 // mutations
 const mutations = {
-  setSettlementStatus(state, status) {
-    state.settlementDialogStatus = state.cartTotalCount > 0 ? status : false;
-  },
-  pushProductToCart(state, { id, value }) {
-    state.skuList.find(item => {
-      if (item.id === id) item.goods_number = value;
-
-      setOrderSkuList(this.getters["usedSkuList/cardSkuList"]);
-
-      this.commit("usedSkuList/cartTotalPrice");
-      this.commit("usedSkuList/cartTotalCount");
-
-      if (state.cartTotalCount === 0) {
-        this.commit("usedSkuList/setSettlementStatus", false);
-      }
-      this.commit("orderCreate/watchStep");
-    });
-  },
-  cartTotalPrice(state) {
-    state.cartTotalPrice = getOrderSkuList().reduce((total, sku) => {
-      return total + parseFloat(sku.goods_price) * parseFloat(sku.goods_number);
-    }, 0);
-  },
-  cartTotalCount(state) {
-    state.cartTotalCount = getOrderSkuList().reduce((total, sku) => {
-      return total + parseInt(sku.goods_number);
-    }, 0);
-  },
   setQueryName(state, query_name) {
     state.param.query_name = query_name;
   },
   initParam(state) {
+
     state.param.start = 0;
     state.param.query_name = "";
     state.param.page = 1;
@@ -70,32 +35,15 @@ const mutations = {
     state.param.page++;
     state.param.start = (state.param.page - 1) * state.param.limit;
   },
-
-  clearSelectedALL(state) {
-    this.commit("usedSkuList/setSettlementStatus", false);
-    clearOrderSkuList();
-    this.commit("usedSkuList/cartTotalPrice");
-    this.commit("usedSkuList/cartTotalCount");
-    this.commit("orderCreate/watchStep");
-    state.skuList.find(sku => sku.goods_number = 0);
+  changeSwitch(state) {
+    state.checkedSwitch = !state.checkedSwitch;
+    state.skuList = [];
   },
-
   setSkuList(state, skuList) {
-    skuList.forEach(item => item.goods_number = 0);
-    let orderSkuList = getOrderSkuList();
-    if (orderSkuList && skuList) {
-      for (let i = 0; i < orderSkuList.length; i++) {
-        for (let j = 0; j < skuList.length; j++) {
-          if (orderSkuList[i].id === skuList[j].id) {
-            skuList[j].goods_number = orderSkuList[i].goods_number;
-          }
-        }
-      }
-      this.commit("usedSkuList/cartTotalPrice");
-      this.commit("usedSkuList/cartTotalCount");
-    }
-    state.settlementDialogStatus = false;
     state.skuList.push(...skuList);
+  },
+  setMatchSku(state, skuList) {
+    state.skuList = skuList;
   }
 };
 
@@ -111,8 +59,21 @@ const actions = {
       console.log("获取商品失败", error);
     });
   },
-  addSku({ commit }, param) {
-    return sku.addSku(param);
+  matchSkuList({ commit }, goods_name) {
+    if (!state.checkedSwitch) return;
+    sku.matchSku(goods_name).then(response => {
+      if (response.success) {
+        response.data.find(item => {
+          item.goods_name = item.name;
+          item.goods_brand = item.brand_cn;
+          item.goods_standard = item.standard;
+          item.goods_price = "";
+        });
+        commit("setMatchSku", response.data);
+      }
+    }).catch(error => {
+      console.log("搜索系统商品失败", error);
+    });
   }
 };
 

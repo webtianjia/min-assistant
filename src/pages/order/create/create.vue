@@ -13,8 +13,9 @@
         <input-code ref="inputCode" @change="setNumber" placeholder="扫描或输入小面单号"></input-code>
       </div>
     </div>
-    <div style="margin-top:96px"></div>
+    <div style="padding-top: 96px"></div>
     <div class="line" style="margin: 0"></div>
+
     <div class="address-card" @click="goTo('/pages/sender/senderList/main?createOrder=true')">
       <div class="card-left">
         <i class="icon icon-sender"></i>
@@ -65,28 +66,22 @@
       </div>
     </div>
     <split></split>
-    <div class="sku-card">
+    <div class="order-sku-card">
       <div class="card-header">
         <div class="title">商品信息</div>
         <div class="select-sku" @click="goTo('/pages/usedSkuList/main')"><span>添加商品</span>
         </div>
       </div>
       <div class="sku-list">
-        <div class="sku-item" v-for="sku in cardSkuList" :key="sku.id">
-          <div class="sku-name text-overflow">{{sku.goods_name}}{{sku.goods_brand}}</div>
-          <div class="sku-spc text-overflow">{{sku.goods_standard}}</div>
-          <div class="sku-price text-overflow">￥{{sku.goods_price}}</div>
-          <div class="sku-qty text-overflow">{{sku.goods_number}}</div>
-          <div class="sku-controller">
-            <i class="icon icon-edit" @click="editSku(sku)"></i>
-            <i class="icon icon-del" @click="deleteConfirm(sku.id)"></i>
-          </div>
+        <div v-for="(sku,index) in orderSkuList" :key="index.id">
+          <sku-card :sku="sku" :index="index" @delete="deleteConfirm" @edit="editSku"></sku-card>
         </div>
-        <no-data v-if="cardSkuList.length<=0" type="no-sku" text="暂无寄件商品，请添加"></no-data>
+        <no-data v-if="orderSkuList.length<=0" type="no-sku" text="暂无寄件商品，请添加"></no-data>
       </div>
     </div>
     <div class="submit-btn" :class="{active:hasSubmit}" @click="submitOrder"><span
       class="text">下单</span></div>
+    <div style="padding-top: 40px"></div>
   </div>
 </template>
 
@@ -94,20 +89,20 @@
   import split from "@/components/split";
   import inputCode from "@/components/input-code";
   import noData from "@/components/no-data";
-  import { formatPhone, formatIdCard ,showTotal} from "@/utils/index";
-  import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
-  import { getOrderSkuList } from "@/utils/orderUtil";
+  import skuCard from "@/components/skuCard";
+  import { formatPhone, formatIdCard, showTotal } from "@/utils/index";
+  import { mapState, mapMutations, mapActions } from "vuex";
 
   export default {
     name: "create",
     components: {
       split,
       inputCode,
-      noData
+      noData,
+      skuCard
     },
     data() {
       return {
-        cardSkuList: getOrderSkuList(),
         package_number: null
       };
     },
@@ -126,10 +121,10 @@
           }
           return state.sender;
         },
-        step: "step"
+        orderSkuList: "orderSkuList"
       }),
       hasSubmit() {
-        return this.consignee && this.sender && this.cardSkuList.length > 0;
+        return this.consignee && this.sender && this.orderSkuList.length > 0;
       }
     },
     methods: {
@@ -163,7 +158,7 @@
               consignee_district: this.consignee.area,
               consignee_address: this.consignee.address
             }),
-            goods: JSON.stringify(this.cardSkuList)
+            goods: JSON.stringify(this.orderSkuList)
           }).then(response => {
             if (response.success) {
               this.$refs.inputCode.clear();
@@ -177,8 +172,8 @@
               });
             } else {
               showTotal({
-                title:`${response.msg}`
-              })
+                title: `${response.msg}`
+              });
             }
           }).catch(error => {
             console.log("创建订单出错", error);
@@ -196,22 +191,24 @@
       setNumber(value) {
         this.package_number = value;
       },
-      editSku(sku) {
+      editSku(sku, index) {
         this.$router.push({
           path: "/pages/sku/editOrderSku/main",
           query: {
-            data: JSON.stringify(sku)
+            data: JSON.stringify(sku),
+            index: index,
+            createOrder: true
           }
         });
       },
-      deleteConfirm(id) {
+      deleteConfirm({ index }) {
         let that = this;
         wx.showModal({
           title: "提示",
           content: "是否确认删除该商品？",
           success(WXresponse) {
             if (WXresponse.confirm) {
-              that.deleteSku(id);
+              that.deleteSku(index);
             }
           }
         });
@@ -226,11 +223,6 @@
           });
         }
       });
-    },
-    watch: {
-      step(value) {
-        this.cardSkuList = getOrderSkuList();
-      }
     },
     mounted() {
       this.initOrderData();
@@ -365,7 +357,7 @@
     }
   }
 
-  .sku-card {
+  .order-sku-card {
     padding: 15px;
     .card-header {
       display: flex;
@@ -449,15 +441,10 @@
     }
   }
 
-  .container {
-    display: flex;
-    flex-flow: column;
-  }
-
   .submit-btn {
     width: 320px;
     height: 40px;
-    margin: 0 auto 40px;
+    margin: 0 auto;
     background: #bbb;
     color: #fff;
     display: flex;

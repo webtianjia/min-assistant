@@ -4,19 +4,19 @@
       <div class="form-horizontal">
         <div class="form-group">
           <label class="label">商品名称</label>
-          <input name="skuName" :disabled="isUpdate" v-model="sku.goods_name" class="form-control"
+          <input name="skuName" v-model="sku.goods_name" class="form-control"
                  placeholder-style="color:#9e9e9e;"
                  placeholder="请输入商品名称">
         </div>
         <div class="form-group">
           <label class="label">商品品牌</label>
-          <input name="skuBrand" :disabled="isUpdate" v-model="sku.goods_brand" class="form-control"
+          <input name="skuBrand"  v-model="sku.goods_brand" class="form-control"
                  placeholder-style="color:#9e9e9e;"
                  placeholder="请输入商品品牌">
         </div>
         <div class="form-group">
           <label class="label">规格型号</label>
-          <input name="skuPic" :disabled="isUpdate" v-model="sku.goods_standard" class="form-control"
+          <input name="skuPic"  v-model="sku.goods_standard" class="form-control"
                  placeholder-style="color:#9e9e9e;"
                  placeholder="请输入规格型号，如：500g">
         </div>
@@ -39,9 +39,10 @@
 </template>
 
 <script>
-  import { initData ,showTotal} from "@/utils/index";
+  import { initData, showTotal } from "@/utils/index";
   import { WxValidate } from "@/utils/WxValidate";
   import { mapMutations, mapActions } from "vuex";
+
   let Validate;
   export default {
     name: "editOrderSku",
@@ -59,64 +60,50 @@
     },
     methods: {
       ...mapMutations("orderCreate", {
-        orderCreateAddSku: "addSku",
-        orderCreateUpdateSku: "updateSku"
+        createOrderUpdateSku: "updateSku"
       }),
       ...mapMutations("orderEdit", {
-        orderUpdateAddSku: "addSku",
-        orderUpdateUpdateSku: "updateSku"
+        updateOrderUpdateSku: "updateSku"
       }),
-      ...mapActions("editSku", {
-        addSku: "addSku"
+      ...mapMutations("shopCart", {
+        shopAddSku: "addSku",
+        shopUpdateSku: "updateSku"
       }),
       formSubmit(event) {
         if (!Validate.checkForm(event.mp)) {
           const error = Validate.errorList[0];
-          wx.showModal({
-            content: `${error.msg}`,
-            showCancel: false
+          showTotal({
+            title: `${error.msg}`
           });
         } else {
           if (this.isUpdate) {
-            if (this.sku.updateOrder) {
-              this.orderUpdateUpdateSku(this.sku);
-            } else {
-              this.orderCreateUpdateSku(this.sku);
+            if (this.$mp.query.createOrder) {
+              /*修改创建订单商品*/
+              this.createOrderUpdateSku({ sku: this.sku, index: this.$mp.query.index });
             }
-            let that = this;
-            showTotal({
-              title: `操作成功`,
-              complete() {
-                setTimeout(() => {
-                  that.$router.back();
-                }, 500);
-              }
-            });
+            if (this.$mp.query.updateOrder) {
+              /*修改已生成订单商品*/
+              this.updateOrderUpdateSku({ sku: this.sku, index: this.$mp.query.index });
+            }
+            if (this.$mp.query.shopCart) {
+              /*修改购物车商品*/
+              this.shopUpdateSku({ sku: this.sku, index: this.$mp.query.index });
+            }
           } else {
-            this.addSku(this.sku).then(response => {
-              if (response.success) {
-                if (this.$mp.query.updateOrder) {
-                  this.orderUpdateAddSku({ sku: response.data, goods_number: this.sku.goods_number });
-                } else {
-                  this.orderCreateAddSku({ sku: response.data, goods_number: this.sku.goods_number });
-                }
-                let that = this;
-                showTotal({
-                  title: `操作成功`,
-                  complete() {
-                    setTimeout(() => {
-                      that.$router.back();
-                    }, 500);
-                  }
-                });
-              }
-            }).catch(error => {
-              console.log("添加商品出错", error);
-            });
+            /*手动添加商品*/
+            this.shopAddSku(this.sku);
           }
+          let that = this;
+          showTotal({
+            title: `操作成功`,
+            complete() {
+              setTimeout(() => {
+                that.$router.back();
+              }, 500);
+            }
+          });
         }
-      }
-      ,
+      },
       initValidate() {
         const rules = {
           skuName: {
@@ -132,7 +119,7 @@
             required: true,
             number: true,
             min: 1,
-            max:999
+            max: 999
           },
           price: {
             required: true,
@@ -154,7 +141,7 @@
             required: "请输入商品数量",
             number: "请输入正确商品数量",
             min: "数量最少为1",
-            max:"数量最多999"
+            max: "数量最多999"
           },
           price: {
             required: "请输入商品单价"

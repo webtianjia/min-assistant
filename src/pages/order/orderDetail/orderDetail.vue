@@ -64,20 +64,23 @@
     </div>
     <split></split>
     <div class="sku-list">
-      <div class="sku-card" v-for="item in orderDetail.goodsList" :key="item.id">
-        <div class="title text-overflow">
-          {{item.goods_name}}
-          {{item.goods_brand}}
-          {{item.goods_standard}}
-        </div>
-        <div class="sku-wrapper">
-          <div style="display: flex;align-items: center">
-            <span class="sku-spc text-overflow"> {{item.goods_standard}}</span>
-            <span class="sku-price"> ￥{{item.goods_price}}</span>
-          </div>
-          <div class="sku-qty">x{{item.goods_number}}</div>
-        </div>
+      <div v-for="sku in orderDetail.goodsList" :key="sku.id">
+        <sku-card :sku="sku" :controller="false"></sku-card>
       </div>
+      <!--    <div class="sku-card" v-for="item in orderDetail.goodsList" :key="item.id">
+            <div class="title text-overflow">
+              {{item.goods_name}}
+              {{item.goods_brand}}
+              {{item.goods_standard}}
+            </div>
+            <div class="sku-wrapper">
+              <div style="display: flex;align-items: center">
+                <span class="sku-spc text-overflow"> {{item.goods_standard}}</span>
+                <span class="sku-price"> ￥{{item.goods_price}}</span>
+              </div>
+              <div class="sku-qty">x{{item.goods_number}}</div>
+            </div>
+          </div>-->
     </div>
     <split></split>
     <div class="system-warehouse" v-if="orderDetail.xyReceivingPO">
@@ -91,10 +94,6 @@
           <i class=" icon icon-address"></i>
           <span class="text">{{orderDetail.xyReceivingPO.receiving_address}}</span>
         </p>
-        <!--       <p class="phone">
-                 <i class="icon icon-phone"></i>
-                 <span class="text">{{orderDetail.xyReceivingPO.contact_phone}}</span>
-               </p>-->
       </div>
     </div>
     <canvas style="width: 100%; height: 336px;position: fixed;bottom: 200vh;right:200vh;background: #fff"
@@ -105,6 +104,7 @@
 <script>
   import split from "@/components/split";
   import { formatIdCard, formatPhone } from "@/utils/index";
+  import skuCard from "@/components/skuCard";
   import { formatStatus } from "../utils";
   import { mapActions, mapState } from "vuex";
 
@@ -115,6 +115,10 @@
         active: false,
         imageUrl: null
       };
+    },
+    components: {
+      split,
+      skuCard
     },
     computed: {
       ...mapState("orderDetail", {
@@ -192,9 +196,6 @@
           context.setFillStyle("#2e2e2e");
           context.drawImage("../../../static/img/shareStatic/address-2.png", 20, 259, 18, 18);
           context.fillText(orderDetail.xyReceivingPO.receiving_address, 50, 273, windowWidth - 20);
-          /*
-                    context.drawImage("../../../static/img/shareStatic/phone.png", 20, 288, 18, 18);
-                    context.fillText(orderDetail.xyReceivingPO.contact_phone, 50, 301, windowWidth - 20);*/
         }
         let that = this;
         context.draw(false,
@@ -237,9 +238,7 @@
         imageUrl: imageUrl
       };
     },
-    components: {
-      split
-    },
+
     onUnload() {
       if (this.$options.data) {
         Object.assign(this.$data, this.$options.data());
@@ -399,7 +398,7 @@
 
   .sku-list {
     padding: 0 15px;
-    .sku-card {
+/*    .sku-card {
       padding: 15px 0;
       font-size: 12px;
       .title, .price {
@@ -433,7 +432,7 @@
         position: absolute;
         bottom: 0;
       }
-    }
+    }*/
   }
 
   .system-warehouse {

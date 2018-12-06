@@ -12,11 +12,7 @@
               <label class="label">包裹号</label>
               <span class="text">{{order.order_no}}</span>
             </div>
-            <div class="order-wrapper">
-              <!--<i class="icon icon-time"></i>
-              <span class="time"><time-down ref="timeDown" @time-end="timeEnd(order)" endText="已过期"
-                                            :endTime="order.orderTimeOut"></time-down></span>-->
-            </div>
+            <div class="order-wrapper"></div>
           </div>
           <div class="card-item">
             <div class="order-wrapper">
@@ -72,7 +68,6 @@
 
 <script>
   import split from "@/components/split";
-  import timeDown from "@/components/timeDown";
   import noData from "@/components/no-data";
   import navTabs from "@/components/nav-tabs";
   import noDataBottom from "@/components/no-data-bottom";
@@ -85,7 +80,6 @@
     name: "orderList",
     components: {
       split,
-      timeDown,
       noData,
       navTabs,
       noDataBottom
@@ -138,8 +132,10 @@
                 showTotal({
                   title: "删除成功"
                 });
-                that.initParam();
-                this.getOrderList();
+                if (that.orderList.length <= 3) {
+                  that.initParam();
+                  that.getOrderList();
+                }
               });
             }
           }
@@ -159,13 +155,6 @@
         });
       }
     },
-    mounted() {
-      /*  if (this.$refs.timeDown) {
-          this.$refs.timeDown.forEach((item) => {
-            item.start();
-          });
-        }*/
-    },
     onShow() {
       this.initParam();
       let param = this.$mp.query.data;
@@ -183,11 +172,6 @@
       this.getOrderList();
     },
     onUnload() {
-      /*    if (this.$refs.timeDown) {
-            this.$refs.timeDown.forEach((item) => {
-              item.end();
-            });
-          }*/
       if (this.$options.data) {
         Object.assign(this.$data, this.$options.data());
       }
@@ -195,11 +179,6 @@
       if (this._watcher && this._watcher.teardown) {
         this._watcher.teardown();
       }
-    },
-    onHide() {
-      /*this.$refs.timeDown.forEach((item) => {
-        item.end();
-      });*/
     }
   };
 </script>
@@ -242,15 +221,8 @@
         }
       }
 
-      .status, .time {
+      .status {
         color: #f56356;
-      }
-      .icon-time {
-        margin-right: 3px;
-        width: 16px;
-        height: 16px;
-        background: data-uri("../../../../static/img/i-time.png") no-repeat center;
-        background-size: cover;
       }
       .icon-edit, .icon-del {
         width: 38px;

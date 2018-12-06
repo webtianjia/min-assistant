@@ -10,7 +10,6 @@
     <div class="sku-list">
       <div v-for="sku in skuList" :key="sku.id">
         <sku-card :sku="sku" @delete="deleteConfirm" @edit="goTo"></sku-card>
-        <split></split>
       </div>
       <div style="margin-top: 70px" v-if="skuList.length<=0">
         <no-data text="暂无寄件商品，请添加"></no-data>
@@ -54,7 +53,7 @@
       ...mapMutations("orderCreate", {
         deleteOrderSku: "deleteSku"
       }),
-      deleteConfirm(skuId) {
+      deleteConfirm({ skuId }) {
         let that = this;
         wx.showModal({
           title: "提示",
@@ -65,8 +64,10 @@
                 showTotal({
                   title: `删除成功`
                 });
-                that.initParam();
-                that.getSkuList();
+                if (that.skuList.length <= 3) {
+                  that.initParam();
+                  that.getSkuList();
+                }
               });
               that.deleteOrderSku(skuId);
             }
@@ -137,7 +138,7 @@
   }
 
   .sku-list {
-    padding-top: 151px;
+    padding: 160px 15px 0;
   }
 
 </style>

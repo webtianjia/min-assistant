@@ -11,7 +11,7 @@
         </li>
       </ul>
       <div class="systemReceivingList">
-        <div v-for="systemReceiving in systemReceivingList" :key="systemReceiving.id">
+        <div v-for="(systemReceiving,index) in systemReceivingList" :key="systemReceiving.id">
           <div class="location-card">
             <div class="location-card-title">
               <span class="text">{{systemReceiving.receiving_name}}</span>
@@ -29,12 +29,15 @@
                 <i class="icon icon-time"></i>
                 <span class="text">营业时间：{{systemReceiving.business_time}}</span>
               </div>
-              <div class="card-item">
+              <div class="card-item desc-box">
                 <span style=" white-space: nowrap;display: flex;align-items: center"> <i
                   class="icon icon-desc"></i><span>业务说明：</span></span>
-                <div class="text">
-                  <span v-html="systemReceiving.explain_desc"></span>
+                <div class="text" @click="toggleDesc(index)" v-show="!systemReceiving.descShow">
+                  <i class="icon icon-right"></i>
                 </div>
+              </div>
+              <div class="desc-content" v-show="systemReceiving.descShow">
+                <span class="text-overflow-2" v-html="systemReceiving.explain_desc"></span>-
               </div>
             </div>
           </div>
@@ -43,12 +46,11 @@
         <div style="padding-top: 90px" v-if="systemReceivingList.length<=0">
           <no-data type="no-receiving" text="暂无收货点信息"></no-data>
         </div>
-        <div v-if="isNoDataBottom && systemReceivingList.length > 3">
+        <div v-if="isNoDataBottom && systemReceivingList.length > 2">
           <no-data-bottom></no-data-bottom>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -83,13 +85,13 @@
       ...mapMutations("systemReceivingList", {
         initParam: "initParam",
         changeStart: "changeStart",
-        setCountry: "setCountry"
+        setCountry: "setCountry",
+        toggleDesc: "toggleDesc"
       }),
       changeTab(value) {
         if (value === this.activeTab) return;
         this.initParam();
         this.setCountry(value);
-
         this.getSystemReceivingList();
       }
     },
@@ -169,10 +171,11 @@
   .systemReceivingList {
     min-height: 100vh;
     width: 100%;
+
   }
 
   .location-card {
-    padding: 0 15px;
+    padding-left: 15px;
     .location-card-title {
       padding: 15px 0;
       .text {
@@ -214,14 +217,28 @@
             background-image: data-uri("../../../static/img/i-phone.png");
           }
           &.icon-time {
-            background-image: data-uri("../../../static/img/i-time-2.png");
+            background-image: data-uri("../../../static/img/i-time.png");
           }
           &.icon-desc {
             background-image: data-uri("../../../static/img/i-yewu.png");
           }
+          &.icon-right {
+            background-image: data-uri("../../../static/img/right.png");
+            transform: rotate(90deg);
+          }
+        }
+        &.desc-box {
+          justify-content: space-between;
+          align-items: center;
+          height: 26px;
+          background: #f6f6f6;
         }
       }
 
     }
+  }
+  .desc-content{
+    background: #f6f6f6;
+    padding: 15px;
   }
 </style>

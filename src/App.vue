@@ -1,4 +1,3 @@
-
 <style lang="less">
   .container {
     min-height: 100vh;
@@ -17,6 +16,18 @@
     overflow: hidden;
   }
 
+  .text-overflow-2 {
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    display: -webkit-box;
+
+    -webkit-box-orient: vertical;
+
+    -webkit-line-clamp: 2;
+  }
+
   .disabled-scroll {
     top: 0;
     left: 0;
@@ -25,6 +36,10 @@
     overflow: hidden;
     position: fixed;
     z-index: 0;
+  }
+
+  .color-444 {
+    color: #444 !important;
   }
 
   .header-fixed {

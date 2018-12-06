@@ -1,14 +1,24 @@
 <template>
   <div class="sku-card" v-if="sku">
-    <div class="sku-title text-overflow">{{sku.goods_name}}{{sku.goods_brand}}{{sku.goods_standard}}</div>
-    <div class="controller">
-      <div style="display: flex;align-items: center">
-        <span class="sku-pic text-overflow">{{sku.goods_standard}}</span>
-        <span class="sku-price">￥{{sku.goods_price}}</span>
+    <div class="card-item ">
+      <div class="wrapper">
+        <span class="text-overflow sku-attr w-134 color-444">{{sku.goods_name}}</span>
+        <span class="sku-price warning" v-if="sku.goods_price">￥{{sku.goods_price}}</span>
+        <span class="sku-price warning" v-else v-show="reduce">待设价</span>
+        <span class="sku-attr" v-if="sku.goods_number">×{{sku.goods_number}}</span>
       </div>
-      <div class="controller-btn">
-        <i class="icon icon-del" @click="deleteSku(sku.id)"></i>
+      <div @click="goTo(sku,index)">
+        <slot></slot>
+      </div>
+    </div>
+    <div class="card-item">
+      <div class="wrapper">
+        <span class="sku-attr text-overflow w-134 color-444">{{sku.goods_brand}}</span>
+        <span class="sku-attr text-overflow">{{sku.goods_standard}}</span>
+      </div>
+      <div class="controller-btn" v-if="controller">
         <i class="icon icon-edit" @click="editSku(sku)"></i>
+        <i class="icon icon-del" @click="deleteSku(sku.id)"></i>
       </div>
     </div>
   </div>
@@ -22,14 +32,22 @@
       sku: {
         type: Object,
         default: null
+      },
+      index: {
+        type: Number,
+        default: null
+      },
+      controller:{
+        type:Boolean,
+        default:true
       }
     },
     methods: {
       deleteSku(skuId) {
-        this.$emit("delete", skuId);
+        this.$emit("delete", { skuId, index: this.index });
       },
       editSku(sku) {
-        this.$emit("edit", sku);
+        this.$emit("edit", sku, this.index);
       }
     }
   };
@@ -37,46 +55,64 @@
 
 <style scoped lang="less">
   .sku-card {
-    min-height: 60px;
+    min-height: 65px;
     background: #fff;
-    padding: 15px;
-    font-size: 13px;
-    .sku-title {
-      color: #444;
-    }
-    .sku-pic {
+    padding: 15px 0;
+    box-sizing: border-box;
+    .sku-attr {
       font-size: 11px;
       color: #9e9e9e;
-      width: 60px;
-      display: inline-block;
-      vertical-align: middle;
+      margin-right: 10px;
     }
     .sku-price {
-      color: #2e2e2e;
+      font-size: 11px;
+      margin-right: 40px;
+      &.warning {
+        color: #ff3636;
+      }
     }
-    .controller {
-      margin-top: 15px;
+    .card-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      .icon {
-        width: 38px;
-        height: 38px;
-        background: no-repeat center;
-        background-size: 19px;
-        &.icon-edit {
-          background-image: data-uri("../../static/img/i-edit.png");
-          background-position: right center;
-        }
-        &.icon-del {
-          background-image: data-uri("../../static/img/i-del.png");
-
-        }
+      &:last-child{
+        margin-top: 10px;
       }
-      .controller-btn {
+      .wrapper {
         display: flex;
-        justify-content: space-between;
+        align-items: center;
       }
+    }
+    position: relative;
+    &:after {
+      content: '';
+      height: 1px;
+      width: 100%;
+      background: #e6e6e6;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+
+    }
+    .w-134 {
+      width: 134px;
+    }
+    .icon {
+      width: 38px;
+      height: 38px;
+      background: no-repeat center;
+      background-size: 19px;
+      background-position: right center;
+      &.icon-edit {
+        background-image: data-uri("../../static/img/i-edit.png");
+      }
+      &.icon-del {
+        background-image: data-uri("../../static/img/i-del.png");
+      }
+    }
+    .controller-btn {
+      display: flex;
+      justify-content: space-between;
     }
   }
 </style>

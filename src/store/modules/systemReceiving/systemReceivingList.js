@@ -33,6 +33,9 @@ const mutations = {
   setCountry(state, value) {
     state.param.receiving_country = value;
   },
+  toggleDesc(state, index) {
+    state.systemReceivingList[index].descShow = true;
+  },
   changeStart(state) {
     state.param.page++;
     state.param.start = (state.param.page - 1) * state.param.limit;
@@ -51,6 +54,9 @@ const actions = {
     systemReceiving.getSystemReceivingList(state.param).then(response => {
       if (response.success) {
         state.total = response.data.total;
+        response.data.rows.find(item => {
+          item.descShow = false;
+        });
         commit("setSystemReceivingList", response.data.rows);
       }
     }).catch(error => {

@@ -20,6 +20,8 @@ import orderEdit from "./modules/order/orderEdit";
 import login from "./modules/login/login";
 import user from "./modules/user/user";
 
+import shopCart from "./modules/shopCart/shopCart";
+
 Vue.use(Vuex);
 export default new Vuex.Store({
   modules: {
@@ -36,7 +38,8 @@ export default new Vuex.Store({
     orderDetail,
     orderEdit,
     login,
-    user
+    user,
+    shopCart
   }
 });
 

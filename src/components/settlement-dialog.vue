@@ -1,6 +1,6 @@
 <template>
   <div class="settlement">
-    <div class='settlement-mask' v-show=" settlementDialogStatus" @click='setSettlementStatus(false)'></div>
+    <div class='settlement-mask' v-show=" settlementDialogStatus" @click.stop='setSettlementStatus(false)'></div>
     <div :class="['settlement-actionsheet', settlementDialogStatus?'settlement-actionsheet_toggle':'']">
       <div class="panel">
         <div class="panel-heading">
@@ -11,11 +11,13 @@
           <i class="icon icon-close" @click="setSettlementStatus(false)"></i>
         </div>
         <div class="panel-body">
-          <div class="sku-list">
-            <div v-for="sku in cardSkuList" :key="sku.id">
-              <sku-card2 :sku="sku" @changeQty="pushProductToCart"></sku-card2>
+          <scroll-view scroll-y="true" class="sku-list">
+            <div v-for="(sku,$index) in productList" :key="sku.id" v-show="sku.goods_number>0">
+              <sku-card2 :sku="sku" :index="$index" @changeQty="changeQty">
+                <a class="icon icon-edit"></a>
+              </sku-card2>
             </div>
-          </div>
+          </scroll-view>
         </div>
       </div>
     </div>
@@ -28,30 +30,26 @@
 
   import { mapState, mapMutations, mapGetters } from "vuex";
 
-  import { getOrderSkuList } from "../utils/orderUtil";
-
   export default {
     name: "settlement-dialog",
     computed: {
-      ...mapState("usedSkuList", {
-        settlementDialogStatus: state => state.settlementDialogStatus,
-        cartTotalPrice: "cartTotalPrice"
+      ...mapState("shopCart", {
+        settlementDialogStatus: "settlementDialogStatus",
+        productList: "productList"
+      }),
+      ...mapGetters("shopCart", {
+        cartTotalCount: "cartTotalCount"
       })
-    },
-    data() {
-      return {
-        cardSkuList: getOrderSkuList()
-      };
     },
     components: {
       split,
       skuCard2
     },
     methods: {
-      ...mapMutations("usedSkuList", {
+      ...mapMutations("shopCart", {
         setSettlementStatus: "setSettlementStatus",
         clearSelectedALL: "clearSelectedALL",
-        pushProductToCart: "pushProductToCart"
+        changeQty: "changeQty"
       }),
       deleteConfirm() {
         let that = this;
@@ -64,11 +62,6 @@
             }
           }
         });
-      }
-    },
-    watch: {
-      cartTotalPrice() {
-        this.cardSkuList = getOrderSkuList();
       }
     }
   };
@@ -119,27 +112,31 @@
             color: #666;
           }
         }
-        .icon {
-          width: 38px;
-          height: 38px;
-          background: no-repeat center;
-          background-size: 19px;
-          &.icon-del {
-            background-image: data-uri("../../static/img/i-del.png");
-          }
-          &.icon-close {
-            background-image: data-uri("../../static/img/i-close.png");
-          }
-        }
+      }
+    }
+    .icon {
+      width: 38px;
+      height: 38px;
+      background: no-repeat center;
+      background-size: 19px;
+      &.icon-del {
+        background-image: data-uri("../../static/img/i-del.png");
+      }
+      &.icon-close {
+        background-image: data-uri("../../static/img/i-close.png");
+      }
+      &.icon-edit {
+        flex: 0 0 38px;
+        background-image: url("../../static/img/i-edit.png");
       }
     }
     .sku-list {
       padding: 0 15px;
+      box-sizing: border-box;
+      max-height: 300px;
     }
     .panel-body {
       padding-bottom: 60px;
-      max-height: 300px;
-      overflow-y: auto;
     }
   }
 

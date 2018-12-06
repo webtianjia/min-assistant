@@ -1,20 +1,16 @@
 import orderAPI from "@/api/order/order";
 import senderAPI from "@/api/sender/sender";
-import { getOrderSkuList, setOrderSkuList, clearOrderSkuList } from "@/utils/orderUtil";
 
 const state = {
   consignee: null,
   sender: null,
-  step: 0
+  orderSkuList: []
 };
 //getters
 const getters = {};
 
 // mutations
 const mutations = {
-  watchStep(state) {
-    state.step++;
-  },
   setConsignee(state, consignee) {
     state.consignee = consignee;
   },
@@ -22,44 +18,31 @@ const mutations = {
     state.sender = sender;
   },
   clearOrderConsignee(state) {
-    state.consignee=null
+    state.consignee = null;
   },
   clearOrderSender(state) {
-    state.sender=null
+    state.sender = null;
+  },
+  clearOrderSkuList(state) {
+    state.orderSkuList = [];
   },
   initOrderData() {
-    clearOrderSkuList();
     this.commit("orderCreate/clearOrderConsignee");
-    this.commit("orderCreate/watchStep");
+    this.commit("orderCreate/clearOrderSkuList");
   },
   /*修改商品*/
-  updateSku(state, sku) {
-    let orderSkuList = getOrderSkuList();
-    orderSkuList.find(item => {
-      if (item.id === sku.id) {
-        item = Object.assign(item, sku);
-      }
-    });
-    setOrderSkuList(orderSkuList);
-    this.commit("orderCreate/watchStep");
+  updateSku(state, { sku, index }) {
+    state.orderSkuList[index] = Object.assign(state.orderSkuList[index], sku);
   },
   /*添加商品*/
-  addSku(state, { sku, goods_number }) {
-    sku.goods_number = goods_number;
-    let orderSkuList = getOrderSkuList();
-    if (orderSkuList) {
-      orderSkuList.push(sku);
-    } else {
-      orderSkuList = [sku];
-    }
-    setOrderSkuList(orderSkuList);
-    this.commit("orderCreate/watchStep");
+  addSku(state, skuList) {
+    state.orderSkuList.push(...skuList);
   },
   /*删除商品*/
-  deleteSku(state, id) {
-    let orderSkuList = getOrderSkuList().filter(item => item.id !== id);
-    setOrderSkuList(orderSkuList);
-    this.commit("orderCreate/watchStep");
+  deleteSku(state, index) {
+    const orderSkuList = state.orderSkuList;
+    orderSkuList.splice(index, 1);
+    state.orderSkuList = JSON.parse(JSON.stringify(orderSkuList));
   }
 };
 

@@ -56,20 +56,17 @@
       </div>
     </div>
     <split></split>
-    <div class="sku-card">
+    <div class="order-sku-card">
       <div class="card-header">
         <div class="title">商品信息</div>
-        <div class="select-sku" @click="goTo('/pages/order/orderEdit/orderEditSku/main')"><span>修改商品</span>
+        <div class="select-sku" @click="goTo('/pages/usedSkuList/main')"><span>添加商品</span>
         </div>
       </div>
-      <div class="sku-list">
-        <div class="sku-item" v-for="sku in orderDetail.goodsList" :key="sku.id">
-          <div class="sku-name text-overflow">{{sku.goods_name}}{{sku.goods_brand}}{{sku.goods_standard}}</div>
-          <div class="sku-spc text-overflow">{{sku.goods_standard}}</div>
-          <div class="sku-price text-overflow">￥{{sku.goods_price}}</div>
-          <div class="sku-qty text-overflow">{{sku.goods_number}}</div>
+      <div class="sku-list" v-if="goodsList">
+        <div v-for="(sku,index) in goodsList" :key="index.id">
+          <sku-card :sku="sku" :index="index" @delete="deleteConfirm" @edit="editSku"></sku-card>
         </div>
-        <no-data v-if="orderDetail&&orderDetail.goodsList<=0" type="no-sku" text="暂无寄件商品，请添加"></no-data>
+        <no-data v-if="goodsList<=0" type="no-sku" text="暂无寄件商品，请添加"></no-data>
       </div>
     </div>
     <div class="submit-btn" :class="{active:hasSubmit}" @click="submitOrder"><span class="text">提交</span>
@@ -80,17 +77,17 @@
 <script>
   import split from "@/components/split";
   import noData from "@/components/no-data";
+  import skuCard from "@/components/skuCard";
 
-  import { formatPhone, formatIdCard ,showTotal} from "@/utils/index";
-  import { mapState, mapActions, mapMutations } from "vuex";
-
-  import { getOrderSkuList, setOrderSkuList } from "../../../utils/orderUtil";
+  import { formatPhone, formatIdCard, showTotal } from "@/utils/index";
+  import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
 
   export default {
     name: "orderEdit",
     components: {
       split,
-      noData
+      noData,
+      skuCard
     },
     computed: {
       hasSubmit() {
@@ -107,6 +104,9 @@
           }
           return state.orderDetail;
         }
+      }),
+      ...mapGetters("orderEdit", {
+        goodsList: "goodsList"
       })
     },
     methods: {
@@ -115,14 +115,35 @@
         updateOrder: "updateOrder"
       }),
       ...mapMutations("orderEdit", {
-        deleteSku: "deleteSku",
-        updateSku: "updateSku"
+        deleteSku: "deleteSku"
       }),
-      goTo(url, data) {
+      goTo(url) {
         this.$router.push({
           path: url,
           query: {
-            data: JSON.stringify(data)
+            updateOrder: true
+          }
+        });
+      },
+      editSku(sku, index) {
+        this.$router.push({
+          path: "/pages/sku/editOrderSku/main",
+          query: {
+            data: JSON.stringify(sku),
+            index: index,
+            updateOrder: true
+          }
+        });
+      },
+      deleteConfirm({ index }) {
+        let that = this;
+        wx.showModal({
+          title: "提示",
+          content: "是否确认删除该商品？",
+          success(WXresponse) {
+            if (WXresponse.confirm) {
+              that.deleteSku(index);
+            }
           }
         });
       },
@@ -135,16 +156,16 @@
             order: JSON.stringify(param),
             goods: goodsList
           }).then(response => {
-            if(response.success){
-              let that=this;
+            if (response.success) {
+              let that = this;
               showTotal({
-                title:`修改成功`,
-                complete(){
-                  setTimeout(()=>{
+                title: `修改成功`,
+                complete() {
+                  setTimeout(() => {
                     that.$router.back();
-                  },500)
+                  }, 500);
                 }
-              })
+              });
             }
           }).catch(error => {
             console.log("修改订单失败", error);
@@ -272,7 +293,7 @@
     }
   }
 
-  .sku-card {
+  .order-sku-card {
     padding: 15px;
     .card-header {
       display: flex;

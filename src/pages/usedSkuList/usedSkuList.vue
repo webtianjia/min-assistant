@@ -1,35 +1,51 @@
 <template>
   <div class="container " :class="{'disabled-scroll':settlementDialogStatus}">
     <div class="header-fixed">
-      <search-bar ref="searchBar" @change="searchSku"></search-bar>
-      <split color="#fff"></split>
-      <div class="add-default-card" @click="goTo('/pages/sku/editOrderSku/main')">
-        <div class="add-default-btn"></div>
+      <div class="top-wrapper">
+        <div class="switch" @click="changeSwitch" :class="{active:checkedSwitch}">
+          <div class="switch-item"><span class="text">常用商品</span></div>
+          <div class="switch-item"><span class="text">智能匹配</span></div>
+        </div>
+      </div>
+      <split color="#fff" :height="15"></split>
+      <div class="search-bar">
+        <div class="input-group" v-if="checkedSwitch">
+          <i class="icon icon-search"></i>
+          <input type="text" class="search-input" v-model.lazy="matchInput"
+                 placeholder-style="color:#888;" @confirm="confirm" confirm-type="search" placeholder="请输入品名/品牌">
+          <i class="icon icon-clear" v-show="matchInput" @click="matchInput=''"></i>
+        </div>
+        <div class="input-group" v-else>
+          <i class="icon icon-search"></i>
+          <input type="text" class="search-input" v-model.lazy="searchInput"
+                 placeholder-style="color:#888;" @confirm="confirm" confirm-type="search" placeholder="请输入品名/品牌">
+          <i class="icon icon-clear" v-show="searchInput" @click="searchInput=''"></i>
+        </div>
       </div>
     </div>
     <div class="sku-list">
       <div v-for="sku in skuList" :key="sku.id">
-        <sku-card2 :sku="sku" @changeQty="pushProductToCart"></sku-card2>
+        <sku-card2 :sku="sku" @changeQty="pushProductToCart" :reduce="false"></sku-card2>
       </div>
-      <div v-if="skuList.length<=0" style="margin-top: 70px">
-        <no-data type="no-sku" text="暂无寄件商品，请添加"></no-data>
+      <div v-if="searchInput||matchInput&&skuList.length<=0" style="margin-top: 70px">
+        <no-data type="no-sku" text="未搜索到商品"></no-data>
+        <div class="add-card" @click="goTo('/pages/sku/editOrderSku/main')">
+          <div class="text">手动添加</div>
+        </div>
       </div>
     </div>
     <div v-if="isNoDataBottom && skuList.length > 3" style="margin-bottom: 50px">
       <no-data-bottom></no-data-bottom>
     </div>
     <settlement-dialog></settlement-dialog>
-    <div v-if="skuList.length>0" class="footer-fixed-bottom">
-      <div class="settlement" @click="setSettlementStatus(!settlementDialogStatus)">
+    <div class="footer-fixed-bottom">
+      <div class="settlement" @click="setSettlementStatus(cartTotalCount>0)">
         <div class="item">
-          <label class="label">商品总额</label>
-          <span class=" price">￥{{cartTotalPrice}}</span>
-        </div>
-        <div class="item">
-          已选<span class="price">{{cartTotalCount}}</span>件商品
+          <i class="icon"></i>
+          已选<span class="hot">{{cartTotalCount}}</span>件商品
         </div>
       </div>
-      <div class="btn" :class="{active:cartTotalCount}" @click="submitAppend">
+      <div class="btn" :class="{active:cartTotalCount}" @click="submitAddSku">
         <span class="text">确认添加</span>
       </div>
     </div>
@@ -39,7 +55,6 @@
 </template>
 
 <script>
-  import searchBar from "@/components/search-bar";
   import split from "@/components/split";
   import settlementDialog from "@/components/settlement-dialog";
   import skuCard2 from "@/components/skuCard-2";
@@ -49,40 +64,57 @@
   import AddShopCar from "@/utils/AddShopCar";
 
   import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
+  import { showTotal } from "../../utils";
 
   export default {
     name: "usedSkuList",
     computed: {
       ...mapState("usedSkuList", {
-        settlementDialogStatus: "settlementDialogStatus",
         skuList: "skuList",
-        cartTotalPrice: state => {
-          return state.cartTotalPrice.toFixed(2);
-        },
-        cartTotalCount: "cartTotalCount"
+        checkedSwitch: "checkedSwitch"
       }),
       ...mapGetters("usedSkuList", {
-        cardSkuList: "cardSkuList",
         isNoDataBottom: "isNoDataBottom"
+      }),
+      ...mapState("shopCart", {
+        settlementDialogStatus: "settlementDialogStatus"
+      }),
+      ...mapGetters("shopCart", {
+        cartTotalCount: "cartTotalCount",
+        shopCartSkuList: "shopCartSkuList"
       })
     },
     data() {
       return {
-        display_good_box: false
+        display_good_box: false,
+        searchInput: "",
+        matchInput: ""
       };
     },
     methods: {
       ...mapMutations("usedSkuList", {
-        setSettlementStatus: "setSettlementStatus",
-        pushProductToCart2: "pushProductToCart",
         initParam: "initParam",
         setQueryName: "setQueryName",
-        changeStart: "changeStart"
+        changeStart: "changeStart",
+        changeSwitch: "changeSwitch"
+      }),
+      ...mapMutations("shopCart", {
+        pushProduct: "pushProductToCart",
+        setSettlementStatus: "setSettlementStatus",
+        clearSelectedALL: "clearSelectedALL"
+      }),
+      ...mapMutations("orderCreate", {
+        createOrderAddSku: "addSku"
+      }),
+      ...mapMutations("orderEdit", {
+        updateOrderAddSku: "addSku"
       }),
       ...mapActions("usedSkuList", {
-        getSkuList: "getSkuList"
+        getSkuList: "getSkuList",
+        matchSkuList: "matchSkuList"
       }),
       goTo(url, data) {
+        this.searchInput = "";
         this.$router.push({
           path: url,
           query: {
@@ -90,39 +122,54 @@
           }
         });
       },
-      submitAppend() {
+      submitAddSku() {
         if (this.cartTotalCount) {
-          this.$router.back();
+          let skuList = JSON.parse(JSON.stringify(this.shopCartSkuList));
+          if (this.validateAllPrice(skuList)) {
+            if (this.$mp.query.updateOrder) {
+              this.updateOrderAddSku(skuList);
+            } else {
+              this.createOrderAddSku(skuList);
+            }
+            this.clearSelectedALL();
+            this.$router.back();
+          } else {
+            showTotal({
+              title: "部分商品无价格，请手动设置"
+            });
+            setTimeout(() => {
+              this.setSettlementStatus(true);
+            }, 500);
+
+          }
         }
       },
-      searchSku(value) {
+      validateAllPrice(skuList) {
+        let sku = skuList.filter(item => !item.goods_price);
+        return sku.length === 0;
+      },
+      searchSku() {
         this.initParam();
-        this.setQueryName(value);
+        this.setQueryName(this.searchInput);
         this.getSkuList();
       },
-      pushProductToCart(value, e) {
-        this.pushProductToCart2(value);
+      pushProductToCart({ sku, value }, e) {
+        this.pushProduct(sku);
         if (e) {
           this.touchOnGoods(e);
         }
       },
       touchOnGoods(e) {
-        let finger = {
-          x: e.clientX,
-          y: e.clientY
-        };
         AddShopCar.startAddShopAnimation([{
           x: 60,
           y: 750 * wx.getSystemInfoSync().windowHeight / wx.getSystemInfoSync().windowWidth - 50
-        }, finger], this);
+        }, { x: e.clientX, y: e.clientY }], this);
       }
     },
     onShow() {
-      this.initParam();
-      if (this.$refs.searchBar) {
-        this.$refs.searchBar.clear();
+      if (!this.checkedSwitch) {
+        this.searchSku();
       }
-      this.getSkuList();
     },
     onUnload() {
       if (this.$options.data) {
@@ -140,34 +187,151 @@
       this.changeStart();
       this.getSkuList();
     },
+    watch: {
+      searchInput() {
+        this.$nextTick(() => {
+          this.searchSku();
+        });
+      },
+      matchInput(value) {
+        this.$nextTick(() => {
+          this.matchSkuList({ goods_name: value });
+        });
+      },
+      checkedSwitch(value) {
+        this.searchInput = "";
+        this.matchInput = "";
+        this.initParam();
+        if (!value) {
+          this.getSkuList();
+        }
+      }
+    },
     components: {
       split,
       settlementDialog,
       skuCard2,
-      searchBar,
       noData,
       noDataBottom
     }
   };
 </script>
 <style scoped lang="less">
-  .add-default-card {
-    width: 100%;
-    height: 74px;
+  .add-card {
+    width: 210px;
+    margin: 36px auto 0;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f1f1f1;
-    .add-default-btn {
-      width: 115px;
-      height: 34px;
-      background: data-uri("../../../static/img/add-sku.png") no-repeat center;
-      background-size: cover;
+    border-radius: 20px;
+    background: #2eaaf5;
+    .text {
+      color: #fff;
+      font-size: 15px;
+    }
+  }
+
+  .top-wrapper {
+    height: 43px;
+    width: 100%;
+    background: #2aa2fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .switch {
+      width: 212px;
+      height: 28px;
+      border-radius: 19px;
+      box-shadow: 0 0 1px #fff;
+      display: flex;
+      position: relative;
+      &:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        background: #fff;
+        z-index: 10;
+        width: 50%;
+        height: 100%;
+        box-shadow: 0 0 1px #fff;
+        border-radius: 19px;
+        transition: all .3s;
+      }
+      &.active {
+        &:after {
+          transform: translateX(100%);
+        }
+        .switch-item:first-child {
+          color: #d0edff;
+        }
+        .switch-item:last-child {
+          color: #2eaaf5;
+        }
+      }
+      .switch-item {
+        position: relative;
+        z-index: 20;
+        flex: 0 0 50%;
+        width: 50%;
+        background: transparent;
+        font-size: 14px;
+        color: #d0edff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &:first-child {
+          color: #2eaaf5;
+        }
+        &:last-child {
+          color: #d0edff;
+        }
+      }
+    }
+  }
+
+  .search-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .input-group {
+      flex: 0 0 345px;
+      width: 345px;
+      position: relative;
+      .search-input {
+        height: 34px;
+        line-height: 34px;
+        color: #2e2e2e;
+        background: #e9e9e9;
+        border-radius: 4px;
+        font-size: 14px;
+        padding: 0 34px;
+      }
+      .icon {
+        width: 34px;
+        height: 34px;
+        background: no-repeat center;
+        background-size: 16px;
+        position: absolute;
+      }
+      .icon-search {
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        z-index: 10;
+        background-image: data-uri("../../../static/img/search-icon.png");
+      }
+      .icon-clear {
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+        background-image: data-uri("../../../static/img/search-clear.png");
+      }
     }
   }
 
   .sku-list {
-    padding: 151px 15px 10px;
+    padding: 100px 15px 60px;
   }
 
   .footer-fixed-bottom {
@@ -203,7 +367,7 @@
       position: relative;
       width: 100%;
       display: flex;
-      flex-flow: column;
+      align-items: center;
       &:before {
         content: '';
         height: 1px;
@@ -216,17 +380,20 @@
       .item {
         display: flex;
         align-items: center;
-        font-size: 12px;
-        margin-top: 8px;
-        color: #8a8a8a;
-        &:first-child {
-          margin-top: 0;
-        }
+        font-size: 13px;
+        color: #2e2e2e;
         .label {
           color: #2e2e2e;
         }
-        .price {
+        .hot {
           color: #f56356;
+        }
+        .icon {
+          width: 28px;
+          height: 28px;
+          margin-right: 10px;
+          background: data-uri("../../../static/img/i-sku.png") no-repeat center;
+          background-size: cover;
         }
       }
     }

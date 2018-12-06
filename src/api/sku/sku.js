@@ -9,6 +9,9 @@ export default {
   },
   deleteSku: (data) => {
     return fly.request("/goods/delete", data);
+  },
+  matchSku:(data)=>{
+    return fly.request("/goods/match", data);
   }
 };
 

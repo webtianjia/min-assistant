@@ -12,7 +12,6 @@
         </div>
         <span class="qty-control">x{{sku.goods_number}}</span>
       </div>
-
       <div class="icon-control">
         <i class="icon icon-del" @click="deleteConfirm(sku.id)"></i>
         <i class="icon icon-edit" @click="editSku(sku)"></i>
@@ -53,7 +52,6 @@
     justify-content: center;
     box-sizing: border-box;
     padding: 15px;
-
     .sku-title {
       font-size: 13px;
       color: #444;

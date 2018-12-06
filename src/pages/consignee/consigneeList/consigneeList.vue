@@ -42,7 +42,7 @@
   import noData from "@/components/no-data";
 
   import { mapState, mapActions, mapMutations } from "vuex";
-  import { formatIdCard, formatPhone ,showTotal} from "@/utils/index";
+  import { formatIdCard, formatPhone, showTotal } from "@/utils/index";
 
   export default {
     name: "addresseeList",
@@ -84,10 +84,10 @@
           content: "是否确认删除该收件人？",
           success(WXresponse) {
             if (WXresponse.confirm) {
-              that.deleteConsignee(id).then(()=>{
+              that.deleteConsignee(id).then(() => {
                 showTotal({
-                  title:`删除成功`
-                })
+                  title: `删除成功`
+                });
               });
               if (that.orderConsignee && id === that.orderConsignee.id) {
                 that.clearOrderConsignee();

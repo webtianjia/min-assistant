@@ -9,7 +9,6 @@
     "pages/sku/skuList/main",
     "pages/sku/editSku/main",
     "pages/order/orderEdit/main",
-    "pages/order/orderEdit/orderEditSku/main",
     "pages/order/orderDetail/main",
     "pages/order/orderSuccess/main",
     "pages/consignee/consigneeList/main",

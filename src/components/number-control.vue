@@ -1,7 +1,7 @@
 <template>
   <div class="number-control">
-    <i class="icon icon-reduce " v-show="value>0" @click="handleChangeStep('reduce')"></i>
-    <span class="text" v-show="value>0">{{value}}</span>
+    <i class="icon icon-reduce " v-show="reduce&&value>0" @click="handleChangeStep('reduce')"></i>
+    <span class="text" v-show="reduce&&value>0">{{value}}</span>
     <i class="icon icon-plus" @click="handleChangeStep('plus',$event)"></i>
   </div>
 </template>
@@ -41,6 +41,10 @@
       step: {
         type: Number,
         default: 1
+      },
+      reduce:{
+        type:Boolean,
+        default:true
       }
     },
     methods: {

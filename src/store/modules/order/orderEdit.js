@@ -30,23 +30,19 @@ const mutations = {
     state.orderDetail.sender_address = sender.address;
     state.orderDetail.sender_phone = sender.phone;
   },
-
-  addSku(state, { sku, goods_number }) {
-    sku.goods_number = goods_number;
-    state.orderDetail.goodsList.push(sku);
+  /*新增*/
+  addSku(state, skuList) {
+    state.orderDetail.goodsList.push(...skuList);
   },
-  deleteSku(state, id) {
-    let goodsList = state.orderDetail.goodsList;
-    state.orderDetail.goodsList = goodsList.filter(item => item.id !== id);
+  /*删除*/
+  deleteSku(state, index) {
+    const orderSkuList = state.orderDetail.goodsList;
+    orderSkuList.splice(index, 1);
+    state.orderDetail.goodsList = JSON.parse(JSON.stringify(orderSkuList));
   },
-  updateSku(state, sku) {
-    let goodsList = state.orderDetail.goodsList;
-    goodsList.find(item => {
-      if (item.id === sku.id) {
-        item = Object.assign(item, sku);
-      }
-    });
-    state.orderDetail.goodsList = goodsList;
+  /*修改*/
+  updateSku(state, { sku, index }) {
+    state.orderDetail.goodsList[index] = Object.assign(state.orderDetail.goodsList[index], sku);
   }
 };
 

@@ -1,13 +1,22 @@
 <template>
   <div class="sku-card-2" v-if="sku">
-    <div class="sku-title text-overflow">{{sku.goods_name}}{{sku.goods_brand}}{{sku.goods_standard}}</div>
+    <div class="card-item ">
+      <div class="wrapper">
+        <span class="text-overflow sku-attr w-134 color-444">{{sku.goods_name}}</span>
+        <span class="sku-price warning" v-if="sku.goods_price">￥{{sku.goods_price}}</span>
+        <span class="sku-price warning" v-else v-show="reduce">待设价</span>
+      </div>
+      <div @click="goTo(sku,index)">
+        <slot></slot>
+      </div>
+    </div>
     <div class="card-item">
       <div class="wrapper">
-        <span class="sku-pic text-overflow">{{sku.goods_standard}}</span>
-        <span class="sku-price">￥{{sku.goods_price}}</span>
+        <span class="sku-attr text-overflow w-134 color-444">{{sku.goods_brand}}</span>
+        <span class="sku-attr text-overflow">{{sku.goods_standard}}</span>
       </div>
       <div>
-        <number-control @change="changeQty" :value="sku.goods_number"></number-control>
+        <number-control :reduce="reduce" @change="changeQty" :value="sku.goods_number"></number-control>
       </div>
     </div>
   </div>
@@ -25,11 +34,29 @@
       sku: {
         type: Object,
         default: null
+      },
+      reduce: {
+        type: Boolean,
+        default: true
+      },
+      index: {
+        type: Number,
+        default: null
       }
     },
     methods: {
-      changeQty(value,e) {
-        this.$emit("changeQty",{id:this.sku.id,value},e);
+      changeQty(value, e) {
+        this.$emit("changeQty", { sku: this.sku, value: value, index: this.index }, e);
+      },
+      goTo(sku, index) {
+        this.$router.push({
+          path: "/pages/sku/editOrderSku/main",
+          query: {
+            data: JSON.stringify(sku),
+            index: index,
+            shopCart: true
+          }
+        });
       }
     }
   };
@@ -41,26 +68,21 @@
     background: #fff;
     padding: 15px 0;
     box-sizing: border-box;
-    .sku-title {
-      font-size: 12px;
-      color: #444;
-    }
-    .sku-pic {
-      width: 60px;
-      display: inline-block;
-      vertical-align: middle;
+    .sku-attr {
       font-size: 11px;
       color: #9e9e9e;
+      margin-right: 10px;
     }
     .sku-price {
-      font-size: 12px;
-      color: #2e2e2e;
+      font-size: 11px;
+      &.warning {
+        color: #ff3636;
+      }
     }
     .card-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-top: 10px;
       .wrapper {
         display: flex;
         align-items: center;
@@ -76,6 +98,9 @@
       bottom: 0;
       left: 0;
 
+    }
+    .w-134{
+      width: 134px;
     }
   }
 </style>
