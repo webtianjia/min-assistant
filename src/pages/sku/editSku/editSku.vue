@@ -4,19 +4,19 @@
       <div class="form-horizontal">
         <div class="form-group">
           <label class="label">商品名称</label>
-          <input name="skuName"  v-model="sku.goods_name" class="form-control"
+          <input name="skuName" v-model="sku.goods_name" class="form-control"
                  placeholder-style="color:#9e9e9e;"
                  placeholder="请输入商品名称">
         </div>
         <div class="form-group">
           <label class="label">商品品牌</label>
-          <input name="skuBrand"  v-model="sku.goods_brand" class="form-control"
+          <input name="skuBrand" v-model="sku.goods_brand" class="form-control"
                  placeholder-style="color:#9e9e9e;"
                  placeholder="请输入商品品牌">
         </div>
         <div class="form-group">
           <label class="label">规格型号</label>
-          <input name="skuPic"  v-model="sku.goods_standard" class="form-control"
+          <input name="skuPic" v-model="sku.goods_standard" class="form-control"
                  placeholder-style="color:#9e9e9e;"
                  placeholder="请输入规格型号，如：500g">
         </div>
@@ -83,32 +83,41 @@
       initValidate() {
         const rules = {
           skuName: {
-            required: true
+            required: true,
+            maxlength: 50
           },
           skuBrand: {
-            required: true
+            required: true,
+            maxlength: 50
           },
           skuPic: {
-            required: true
+            required: true,
+            maxlength: 50
           },
           price: {
             required: true,
             number: true,
-            minNumber: true
+            minNumber: true,
+            max: 10000,
+            min:0.01
           }
         };
         const messages = {
           skuName: {
-            required: "请输入商品名称"
+            required: "请输入商品名称",
+            maxlength: "商品名称最多输入50字符"
           },
           skuBrand: {
-            required: "请输入商品品牌"
+            required: "请输入商品品牌",
+            maxlength: "商品品牌最多输入50字符"
           },
           skuPic: {
-            required: "请输入规格型号"
+            required: "请输入规格型号",
+            maxlength: "规格型号最多输入50字符"
           },
           price: {
-            required: "请输入商品单价"
+            required: "请输入商品单价",
+            max:"单价不得超过10000"
           }
         };
         Validate = new WxValidate(rules, messages);

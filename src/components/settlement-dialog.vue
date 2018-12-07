@@ -11,13 +11,13 @@
           <i class="icon icon-close" @click="setSettlementStatus(false)"></i>
         </div>
         <div class="panel-body">
-          <scroll-view scroll-y="true" class="sku-list">
+          <div class="sku-list">
             <div v-for="(sku,$index) in productList" :key="sku.id" v-show="sku.goods_number>0">
-              <sku-card2 :sku="sku" :index="$index" @changeQty="changeQty">
+              <sku-card2 checked :sku="sku" :index="$index" @changeQty="changeQty" @changeChecked="changeChecked">
                 <a class="icon icon-edit"></a>
               </sku-card2>
             </div>
-          </scroll-view>
+          </div>
         </div>
       </div>
     </div>
@@ -49,7 +49,8 @@
       ...mapMutations("shopCart", {
         setSettlementStatus: "setSettlementStatus",
         clearSelectedALL: "clearSelectedALL",
-        changeQty: "changeQty"
+        changeQty: "changeQty",
+        changeChecked:"changeChecked"
       }),
       deleteConfirm() {
         let that = this;
@@ -134,6 +135,7 @@
       padding: 0 15px;
       box-sizing: border-box;
       max-height: 300px;
+      overflow-y: auto;
     }
     .panel-body {
       padding-bottom: 60px;

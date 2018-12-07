@@ -53,6 +53,11 @@ const mutations = {
   updateSku(state, { index, sku }) {
     state.productList[index] = Object.assign(state.productList[index], sku);
   },
+  /*设为常用*/
+  changeChecked(state, { index, value }) {
+    state.productList[index] = Object.assign(state.productList[index],{ common: value });
+    //  console.log(state.productList[index]);
+  },
   addSku(state, sku) {
     state.productList.push(sku);
   }

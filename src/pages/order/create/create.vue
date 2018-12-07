@@ -216,6 +216,7 @@
     },
     created() {
       let that = this;
+
       wx.login({
         success(wxResponse) {
           that.login(wxResponse).then(() => {

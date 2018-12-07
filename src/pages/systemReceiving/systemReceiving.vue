@@ -37,7 +37,7 @@
                 </div>
               </div>
               <div class="desc-content" v-show="systemReceiving.descShow">
-                <span class="text-overflow-2" v-html="systemReceiving.explain_desc"></span>-
+                <span v-html="systemReceiving.explain_desc"></span>
               </div>
             </div>
           </div>

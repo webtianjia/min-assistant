@@ -27,14 +27,14 @@
       <div v-for="sku in skuList" :key="sku.id">
         <sku-card2 :sku="sku" @changeQty="pushProductToCart" :reduce="false"></sku-card2>
       </div>
-      <div v-if="searchInput||matchInput&&skuList.length<=0" style="margin-top: 70px">
+      <div v-if="searchInput&&skuList.length<=0||matchInput&&skuList.length<=0" style="margin-top: 70px">
         <no-data type="no-sku" text="未搜索到商品"></no-data>
         <div class="add-card" @click="goTo('/pages/sku/editOrderSku/main')">
           <div class="text">手动添加</div>
         </div>
       </div>
     </div>
-    <div v-if="isNoDataBottom && skuList.length > 3" style="margin-bottom: 50px">
+    <div v-if="isNoDataBottom && skuList.length >6" style="padding-bottom: 50px">
       <no-data-bottom></no-data-bottom>
     </div>
     <settlement-dialog></settlement-dialog>
@@ -167,6 +167,8 @@
       }
     },
     onShow() {
+      this.searchInput = "";
+      this.matchInput = "";
       if (!this.checkedSwitch) {
         this.searchSku();
       }
@@ -181,7 +183,7 @@
       }
     },
     onReachBottom() {
-      if (this.isNoDataBottom) {
+      if (this.isNoDataBottom || this.checkedSwitch) {
         return;
       }
       this.changeStart();
@@ -189,12 +191,14 @@
     },
     watch: {
       searchInput() {
+        if(this.checkedSwitch) return;
         this.$nextTick(() => {
           this.searchSku();
         });
       },
       matchInput(value) {
         this.$nextTick(() => {
+          this.initParam();
           this.matchSkuList({ goods_name: value });
         });
       },
@@ -203,7 +207,7 @@
         this.matchInput = "";
         this.initParam();
         if (!value) {
-          this.getSkuList();
+          this.searchSku();
         }
       }
     },
@@ -331,7 +335,7 @@
   }
 
   .sku-list {
-    padding: 100px 15px 60px;
+    padding: 100px 15px 50px;
   }
 
   .footer-fixed-bottom {

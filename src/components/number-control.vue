@@ -1,8 +1,8 @@
 <template>
   <div class="number-control">
-    <i class="icon icon-reduce " v-show="reduce&&value>0" @click="handleChangeStep('reduce')"></i>
+    <i class="icon icon-reduce " v-show="reduce&&value>0" @click.stop="handleChangeStep('reduce')"></i>
     <span class="text" v-show="reduce&&value>0">{{value}}</span>
-    <i class="icon icon-plus" @click="handleChangeStep('plus',$event)"></i>
+    <i class="icon icon-plus" @click.stop="handleChangeStep('plus',$event)"></i>
   </div>
 </template>
 
@@ -42,13 +42,13 @@
         type: Number,
         default: 1
       },
-      reduce:{
-        type:Boolean,
-        default:true
+      reduce: {
+        type: Boolean,
+        default: true
       }
     },
     methods: {
-      handleChangeStep(type,e) {
+      handleChangeStep(type, e) {
         const { step, max, min } = this;
         let { value } = this;
         if (type === "reduce") {
@@ -57,10 +57,10 @@
           value = addNum(value, step);
         }
         if (value < min || value > max) return null;
-        this.handleEmit(value,e);
+        this.handleEmit(value, e);
       },
-      handleEmit(value,e) {
-        this.$emit("change",value,e);
+      handleEmit(value, e) {
+        this.$emit("change", value, e);
       }
     }
   };

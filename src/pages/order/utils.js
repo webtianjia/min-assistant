@@ -6,8 +6,16 @@ function formatStatus(status) {
       return "已关闭";
     case "income":
       return "运输中";
+
     case "shipmented":
       return "运输中";
+
+    case "bindbatch":
+      return "运输中";
+
+    case "shipments":
+      return "运输中";
+
     case "all":
       return "全部";
   }

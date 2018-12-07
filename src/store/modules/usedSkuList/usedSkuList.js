@@ -3,12 +3,14 @@ import sku from "@/api/sku/sku";
 const state = {
   skuList: [],
   param: {
-    limit: 5,
+    limit: 10,
     start: 0,
     query_name: "",
     page: 1
   },
-  checkedSwitch: false
+  total:0,
+  checkedSwitch: false,
+
 };
 //getters
 const getters = {
@@ -25,7 +27,6 @@ const mutations = {
     state.param.query_name = query_name;
   },
   initParam(state) {
-
     state.param.start = 0;
     state.param.query_name = "";
     state.param.page = 1;
@@ -60,7 +61,6 @@ const actions = {
     });
   },
   matchSkuList({ commit }, goods_name) {
-    if (!state.checkedSwitch) return;
     sku.matchSku(goods_name).then(response => {
       if (response.success) {
         response.data.find(item => {

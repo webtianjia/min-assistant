@@ -11,12 +11,12 @@
       <div v-for="sku in skuList" :key="sku.id">
         <sku-card :sku="sku" @delete="deleteConfirm" @edit="goTo"></sku-card>
       </div>
-      <div style="margin-top: 70px" v-if="skuList.length<=0">
-        <no-data text="暂无寄件商品，请添加"></no-data>
-      </div>
-      <div v-if="isNoDataBottom && skuList.length > 3">
-        <no-data-bottom></no-data-bottom>
-      </div>
+    </div>
+    <div style="margin-top: 70px" v-if="skuList.length<=0">
+      <no-data text="暂无寄件商品，请添加"></no-data>
+    </div>
+    <div v-if="isNoDataBottom && skuList.length > 3">
+      <no-data-bottom></no-data-bottom>
     </div>
   </div>
 </template>
@@ -138,7 +138,7 @@
   }
 
   .sku-list {
-    padding: 160px 15px 0;
+    padding: 160px 15px 10px;
   }
 
 </style>

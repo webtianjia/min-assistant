@@ -20,12 +20,10 @@
         <span class="text">运输中</span>
       </li>
       <li class="nav-item" @click="goTo('/pages/order/orderList/main','已完结')">
-        <badge :value="closeTotal"></badge>
         <i class="icon i-3"></i>
         <span class="text">已完结</span>
       </li>
       <li class="nav-item" @click="goTo('/pages/order/orderList/main','全部')">
-        <badge :value="allTotal"></badge>
         <i class="icon i-4"></i>
         <span class="text">全部订单</span>
       </li>

@@ -3,8 +3,7 @@
     <div class="card-item ">
       <div class="wrapper">
         <span class="text-overflow sku-attr w-134 color-444">{{sku.goods_name}}</span>
-        <span class="sku-price warning" v-if="sku.goods_price">￥{{sku.goods_price}}</span>
-        <span class="sku-price warning" v-else v-show="reduce">待设价</span>
+        <span class="sku-price warning">￥{{sku.goods_price}}</span>
         <span class="sku-attr" v-if="sku.goods_number">×{{sku.goods_number}}</span>
       </div>
       <div @click="goTo(sku,index)">
@@ -14,7 +13,7 @@
     <div class="card-item">
       <div class="wrapper">
         <span class="sku-attr text-overflow w-134 color-444">{{sku.goods_brand}}</span>
-        <span class="sku-attr text-overflow">{{sku.goods_standard}}</span>
+        <span class="sku-attr text-overflow goods_standard">{{sku.goods_standard}}</span>
       </div>
       <div class="controller-btn" v-if="controller">
         <i class="icon icon-edit" @click="editSku(sku)"></i>
@@ -37,9 +36,9 @@
         type: Number,
         default: null
       },
-      controller:{
-        type:Boolean,
-        default:true
+      controller: {
+        type: Boolean,
+        default: true
       }
     },
     methods: {
@@ -66,7 +65,7 @@
     }
     .sku-price {
       font-size: 11px;
-      margin-right: 40px;
+      width: 80px;
       &.warning {
         color: #ff3636;
       }
@@ -75,13 +74,16 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      &:last-child{
+      &:last-child {
         margin-top: 10px;
       }
       .wrapper {
         display: flex;
         align-items: center;
       }
+    }
+    .goods_standard {
+      max-width: 100px;
     }
     position: relative;
     &:after {
