@@ -18,7 +18,17 @@ export default {
   },
   updateOrder: (data) => {
     return fly.request("/order/update", data);
+  },
+  getRoute: (data) => {
+    var tempUurl="https://m.kuaidi100.com/query?type=" + gCompanyCode + "&postid=" + gKuaidiNumber + "&id=1&valicode=&temp=" + Math.random();
+    wx.request({
+      url: tempUurl,
+      success: function( res ) {
+        console.log(res);
+      }
+    })
   }
+
 };
 
 

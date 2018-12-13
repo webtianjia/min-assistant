@@ -1,13 +1,13 @@
 <template>
   <div class="container">
     <div class=" header-fixed">
-      <div class="address-link" @click="goTo('/pages/systemReceiving/main')">
+      <!--<div class="address-link" @click="goTo('/pages/systemReceiving/main')">
         <div class="wrapper">
           <i class="icon icon-address"></i>
           <span class="text">查看所有收货点</span>
         </div>
         <i class="icon icon-right"></i>
-      </div>
+      </div>-->
       <split></split>
       <div class="order-no">
         <input-code ref="inputCode" @change="setNumber" placeholder="扫描或输入小面单号"></input-code>

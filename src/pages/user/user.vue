@@ -38,10 +38,10 @@
         <span class="text">寄件人</span>
         <i class="iconfont icon-right"></i>
       </li>
-      <li class="list-group-item" @click="goTo('/pages/systemReceiving/main')">
+      <!--<li class="list-group-item" @click="goTo('/pages/systemReceiving/main')">
         <span class="text">收货点</span>
         <i class="iconfont icon-right"></i>
-      </li>
+      </li>-->
       <li class="list-group-item" style="margin-top: 25px">
         <span class="text">打包授权码：{{authCode}}</span>
         <span class="copy" @click="setClipboardData(authCode)"><span class="box"><span
