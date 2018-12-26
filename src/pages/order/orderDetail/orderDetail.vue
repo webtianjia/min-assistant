@@ -17,7 +17,15 @@
     <div class="logistics" v-if="orderDetail.logistics_main && orderDetail.waybill_no">
       <span class="title">{{orderDetail.logistics_main}}</span>
       <span class="text">{{orderDetail.waybill_no}}</span>
+      <button class="button" @click="orderRoute">查看物流</button>
     </div>
+
+    <vDialog  v-model="ruleModal" @show="ruleModalConfirm" :vList="message">
+
+    </vDialog>
+
+
+
     <split></split>
     <div class="package-card">
       <div class="card-item">
@@ -40,6 +48,7 @@
         <div class="time-wrapper">
           <label class="label">小面单号</label>
           <span class="text">{{orderDetail.package_number}}</span>
+
         </div>
       </div>
     </div>
@@ -105,6 +114,7 @@
   import split from "@/components/split";
   import { formatIdCard, formatPhone } from "@/utils/index";
   import skuCard from "@/components/skuCard";
+  import vDialog from "@/components/dialog";
   import { formatStatus } from "../utils";
   import { mapActions, mapState } from "vuex";
 
@@ -113,12 +123,15 @@
     data() {
       return {
         active: false,
-        imageUrl: null
+        imageUrl: null,
+        ruleModal:false,
+        message:null
       };
     },
     components: {
       split,
-      skuCard
+      skuCard,
+      vDialog
     },
     computed: {
       ...mapState("orderDetail", {
@@ -136,6 +149,48 @@
       ...mapActions("orderDetail", {
         getOrder: "getOrder"
       }),
+      ruleModalConfirm(value){
+        this.ruleModal=value
+      },
+      orderRoute(){
+        if(this.orderDetail.waybill_no){
+          var t=this;
+          var logistics_code='';
+          if(this.orderDetail.logistics_main=='圆通'){
+            logistics_code='yuantong';
+          }else if(this.orderDetail.logistics_main=='申通'){
+            logistics_code='shentong';
+          }else if(this.orderDetail.logistics_main=='中通'){
+            logistics_code='zhongtong';
+          }else if(this.orderDetail.logistics_main=='韵达'){
+            logistics_code='yunda';
+          }else if(this.orderDetail.logistics_main=='邮政'){
+            logistics_code='youzhengguonei';
+          }else if(this.orderDetail.logistics_main=='顺丰'){
+            logistics_code='shunfeng';
+          }else{
+            logistics_code='';
+          }
+
+          var aurl='https://m.kuaidi100.com/query?type='+logistics_code+'&postid='+this.orderDetail.waybill_no+'&id=1&valicode=&temp='+Math.random();
+          wx.request({
+            url: aurl,
+            success(res) {
+              console.log(res.data)
+              if(res.data.status=='200'){
+                t.message=res.data.data;
+                t.ruleModalConfirm(true)
+              }else{
+                wx.showToast({
+                  title:res.data.message,
+                  icon:"none"
+                })
+              }
+            }
+          })
+        }
+
+      },
       toggleClass() {
         this.active = !this.active;
       },
@@ -255,6 +310,12 @@
 
 <style scoped lang="less">
 
+  .transport-text{
+    font-size: 12px;
+    color: #666666;
+    line-height: 1.5;
+  }
+
   .detail-status {
     height: 90px;
     width: 100%;
@@ -321,6 +382,11 @@
     }
     .title {
       margin-right: 10px;
+    }
+    .button {
+      font-size: 12px;
+      color: #2e2e2e;
+      margin-left: 10px;
     }
   }
 
