@@ -101,7 +101,6 @@ function startAddShopAnimation(potsTemp, nowThis) {
       canvasId: "myCanvas",
       actions: context.getActions()
     });
-
     if (index <= 0) {
       clearInterval(timeInt);
       context.clearRect(x - 10, y - 10, 100, 100);

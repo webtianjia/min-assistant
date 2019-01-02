@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-if="orderDetail">
+  <div class="container" v-if="orderDetail" :class="{'disabled-scroll':ruleModal}">
     <div class="detail-status">
       <ul class="steps">
         <li class="item" :class="{active:orderDetail.statusStr==='未收货'}">
@@ -17,15 +17,9 @@
     <div class="logistics" v-if="orderDetail.logistics_main && orderDetail.waybill_no">
       <span class="title">{{orderDetail.logistics_main}}</span>
       <span class="text">{{orderDetail.waybill_no}}</span>
-      <button class="button" @click="orderRoute">查看物流</button>
+      <button class="button" @click="getOrderRoute">查看物流</button>
     </div>
-
-    <vDialog  v-model="ruleModal" @show="ruleModalConfirm" :vList="message">
-
-    </vDialog>
-
-
-
+    <vDialog v-model="ruleModal" @show="ruleModalConfirm" :vList="message"></vDialog>
     <split></split>
     <div class="package-card">
       <div class="card-item">
@@ -48,7 +42,6 @@
         <div class="time-wrapper">
           <label class="label">小面单号</label>
           <span class="text">{{orderDetail.package_number}}</span>
-
         </div>
       </div>
     </div>
@@ -115,6 +108,7 @@
   import { formatIdCard, formatPhone } from "@/utils/index";
   import skuCard from "@/components/skuCard";
   import vDialog from "@/components/dialog";
+  import { showTotal } from "../../../utils/index";
   import { formatStatus } from "../utils";
   import { mapActions, mapState } from "vuex";
 
@@ -124,8 +118,8 @@
       return {
         active: false,
         imageUrl: null,
-        ruleModal:false,
-        message:null
+        ruleModal: false,
+        message: null
       };
     },
     components: {
@@ -149,47 +143,33 @@
       ...mapActions("orderDetail", {
         getOrder: "getOrder"
       }),
-      ruleModalConfirm(value){
-        this.ruleModal=value
+      ruleModalConfirm(value) {
+        this.ruleModal = value;
       },
-      orderRoute(){
-        if(this.orderDetail.waybill_no){
-          var t=this;
-          var logistics_code='';
-          if(this.orderDetail.logistics_main=='圆通'){
-            logistics_code='yuantong';
-          }else if(this.orderDetail.logistics_main=='申通'){
-            logistics_code='shentong';
-          }else if(this.orderDetail.logistics_main=='中通'){
-            logistics_code='zhongtong';
-          }else if(this.orderDetail.logistics_main=='韵达'){
-            logistics_code='yunda';
-          }else if(this.orderDetail.logistics_main=='邮政'){
-            logistics_code='youzhengguonei';
-          }else if(this.orderDetail.logistics_main=='顺丰'){
-            logistics_code='shunfeng';
-          }else{
-            logistics_code='';
-          }
-
-          var aurl='https://m.kuaidi100.com/query?type='+logistics_code+'&postid='+this.orderDetail.waybill_no+'&id=1&valicode=&temp='+Math.random();
-          wx.request({
-            url: aurl,
-            success(res) {
-              console.log(res.data)
-              if(res.data.status=='200'){
-                t.message=res.data.data;
-                t.ruleModalConfirm(true)
-              }else{
-                wx.showToast({
-                  title:res.data.message,
-                  icon:"none"
-                })
-              }
+      getOrderRoute() {
+        let that = this;
+        wx.showLoading({
+          title: "正在查询....",
+          mask: true
+        });
+        let url = "https://m.kuaidi100.com/query?type=" + getLogisticsCode(this.orderDetail.logistics_main) + "&postid=" + this.orderDetail.waybill_no + "&id=1&valicode=&temp=" + Math.random();
+        wx.request({
+          url: url,
+          success(res) {
+            wx.hideLoading();
+            if (res.data.status == "200") {
+              that.message = res.data.data;
+              that.ruleModalConfirm(true);
+            } else {
+              showTotal({
+                title: res.data.message,
+                icon: "none",
+                mask: true,
+                duration: 3000
+              });
             }
-          })
-        }
-
+          }
+        });
       },
       toggleClass() {
         this.active = !this.active;
@@ -305,12 +285,31 @@
     }
   };
 
+  function getLogisticsCode(str) {
+    switch (str) {
+      case "圆通":
+        return "yuantong";
+      case "申通":
+        return "shentong";
+      case "中通":
+        return "zhongtong";
+      case "韵达":
+        return "yunda";
+      case "邮政":
+        return "youzhengguonei";
+      case "顺丰":
+        return "shunfeng";
+      default :
+        return "";
+    }
+  }
+
 
 </script>
 
 <style scoped lang="less">
 
-  .transport-text{
+  .transport-text {
     font-size: 12px;
     color: #666666;
     line-height: 1.5;
@@ -464,41 +463,41 @@
 
   .sku-list {
     padding: 0 15px;
-/*    .sku-card {
-      padding: 15px 0;
-      font-size: 12px;
-      .title, .price {
-        color: #444;
-      }
-      .sku-wrapper {
-        margin-top: 15px;
-        display: flex;
-        justify-content: space-between;
-      }
-      .sku-spc, .sku-qty {
-        color: #9e9e9e;
-        font-size: 11px;
-      }
-      .sku-spc {
-        width: 60px;
-        display: inline-block;
-        vertical-align: middle;
-      }
-      position: relative;
-      &:last-child {
-        &:after {
-          display: none;
-        }
-      }
-      &:after {
-        content: '';
-        width: 100%;
-        height: 1px;
-        background: #e6e6e6;
-        position: absolute;
-        bottom: 0;
-      }
-    }*/
+    /*    .sku-card {
+          padding: 15px 0;
+          font-size: 12px;
+          .title, .price {
+            color: #444;
+          }
+          .sku-wrapper {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+          }
+          .sku-spc, .sku-qty {
+            color: #9e9e9e;
+            font-size: 11px;
+          }
+          .sku-spc {
+            width: 60px;
+            display: inline-block;
+            vertical-align: middle;
+          }
+          position: relative;
+          &:last-child {
+            &:after {
+              display: none;
+            }
+          }
+          &:after {
+            content: '';
+            width: 100%;
+            height: 1px;
+            background: #e6e6e6;
+            position: absolute;
+            bottom: 0;
+          }
+        }*/
   }
 
   .system-warehouse {
