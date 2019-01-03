@@ -262,7 +262,7 @@
         this.drawing("drawingCanvas", value);
       }
     },
-    onShareAppMessage(res) {
+    onShareAppMessage() {
       let imageUrl = this.imageUrl;
       let id = this.orderDetail.id;
       let title = this.orderDetail.statusStr;
@@ -463,41 +463,6 @@
 
   .sku-list {
     padding: 0 15px;
-    /*    .sku-card {
-          padding: 15px 0;
-          font-size: 12px;
-          .title, .price {
-            color: #444;
-          }
-          .sku-wrapper {
-            margin-top: 15px;
-            display: flex;
-            justify-content: space-between;
-          }
-          .sku-spc, .sku-qty {
-            color: #9e9e9e;
-            font-size: 11px;
-          }
-          .sku-spc {
-            width: 60px;
-            display: inline-block;
-            vertical-align: middle;
-          }
-          position: relative;
-          &:last-child {
-            &:after {
-              display: none;
-            }
-          }
-          &:after {
-            content: '';
-            width: 100%;
-            height: 1px;
-            background: #e6e6e6;
-            position: absolute;
-            bottom: 0;
-          }
-        }*/
   }
 
   .system-warehouse {

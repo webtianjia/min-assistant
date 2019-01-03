@@ -85,35 +85,27 @@ function bezier(potsTemp) {
 
 function startAddShopAnimation(potsTemp, nowThis) {
   nowThis.display_good_box = true;
-  let that1 = nowThis;
+  let that = nowThis;
   let linePos = bezier(potsTemp);
   let bezier_points = linePos["bezier_points"];
   let index = bezier_points.length;
-  let timeInt = setInterval(function() {
+  let width = wx.getSystemInfoSync().windowWidth;
+  let context = wx.createCanvasContext("myCanvas");
+
+  let timeInt = setInterval(()=> {
     index--;
-    let context = wx.createContext();
-    context.fillStyle = "#2aa2fa";
-    let x = bezier_points[index]["x"] / 750 * wx.getSystemInfoSync().windowWidth;
-    let y = bezier_points[index]["y"] / 750 * wx.getSystemInfoSync().windowWidth;
+    let x = bezier_points[index]["x"] / 750 * width;
+    let y = bezier_points[index]["y"] / 750 * width;
     context.arc(x, y, 10, 0, Math.PI * 2, true);
+    context.setFillStyle("#2aa2fa");
     context.fill();
-    wx.drawCanvas({
-      canvasId: "myCanvas",
-      actions: context.getActions()
-    });
+    context.draw();
     if (index <= 0) {
       clearInterval(timeInt);
-      context.clearRect(x - 10, y - 10, 100, 100);
-      wx.drawCanvas({
-        canvasId: "myCanvas",
-        actions: context.getActions()
-      });
-      that1.display_good_box = false;
+      that.display_good_box = false;
     }
-  }, 1);
+  }, 6);
 }
-
-
 module.exports = {
   startAddShopAnimation: startAddShopAnimation
 };

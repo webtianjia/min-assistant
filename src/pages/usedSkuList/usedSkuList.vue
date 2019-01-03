@@ -41,7 +41,7 @@
     <div class="footer-fixed-bottom">
       <div class="settlement" @click="setSettlementStatus(cartTotalCount>0)">
         <div class="item">
-          <i class="icon"></i>
+          <i class="icon animated" :class="{pulse:display_good_box}"></i>
           已选<span class="hot">{{cartTotalCount}}</span>件商品
         </div>
       </div>
@@ -191,7 +191,7 @@
     },
     watch: {
       searchInput() {
-        if(this.checkedSwitch) return;
+        if (this.checkedSwitch) return;
         this.$nextTick(() => {
           this.searchSku();
         });
@@ -336,6 +336,8 @@
 
   .sku-list {
     padding: 100px 15px 50px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch
   }
 
   .footer-fixed-bottom {
@@ -401,5 +403,51 @@
         }
       }
     }
+  }
+
+  @-webkit-keyframes pulse {
+    from {
+      -webkit-transform: scale3d(1, 1, 1);
+      transform: scale3d(1, 1, 1);
+    }
+
+    50% {
+      -webkit-transform: scale3d(1.05, 1.05, 1.05);
+      transform: scale3d(1.05, 1.05, 1.05);
+    }
+
+    to {
+      -webkit-transform: scale3d(1, 1, 1);
+      transform: scale3d(1, 1, 1);
+    }
+  }
+
+  @keyframes pulse {
+    from {
+      -webkit-transform: scale3d(1, 1, 1);
+      transform: scale3d(1, 1, 1);
+    }
+
+    50% {
+      -webkit-transform: scale3d(1.05, 1.05, 1.05);
+      transform: scale3d(1.05, 1.05, 1.05);
+    }
+
+    to {
+      -webkit-transform: scale3d(1, 1, 1);
+      transform: scale3d(1, 1, 1);
+    }
+  }
+
+  .pulse {
+    -webkit-animation-name: pulse;
+    animation-name: pulse;
+  }
+
+  .animated {
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
   }
 </style>

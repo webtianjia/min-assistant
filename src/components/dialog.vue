@@ -53,13 +53,11 @@
       border-radius: 5px;
       background: #fff;
       z-index: 50002;
-
       .dialog-body {
         min-height: 200px;
         max-height: 400px;
         overflow: auto;
       }
-
       .transport-text {
         font-size: 12px;
         color: #666666;
@@ -70,15 +68,12 @@
         display: flex;
         .transport-left {
           width: 25%;
-          vertical-align: middle;
         }
         .transport-middle {
           width: 5%;
-          vertical-align: middle;
         }
         .transport-right {
           width: 70%;
-          vertical-align: middle;
         }
       }
     }
@@ -99,6 +94,7 @@
       bottom: 0;
       right: 0;
       z-index: 50001;
+      overflow: hidden;
       background: rgba(0, 0, 0, .5);
     }
   }
