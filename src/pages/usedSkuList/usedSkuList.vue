@@ -121,7 +121,9 @@
         matchSkuList: "matchSkuList"
       }),
       setNumber(value) {
-        this.matchInput = value;
+        this.$nextTick(()=>{
+          this.matchInput = value;
+        })
       },
       goTo(url, data) {
         this.searchInput = "";
