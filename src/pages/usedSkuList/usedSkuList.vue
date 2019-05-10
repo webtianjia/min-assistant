@@ -121,7 +121,6 @@
         matchSkuList: "matchSkuList"
       }),
       setNumber(value) {
-        console.log(value)
         this.searchInput = value;
       },
       goTo(url, data) {
@@ -180,7 +179,7 @@
     onShow() {
       this.searchInput = "";
       this.matchInput = "";
-      if (!this.checkedSwitch) {
+      if (this.checkedSwitch) {
         this.searchSku();
       }
     },
