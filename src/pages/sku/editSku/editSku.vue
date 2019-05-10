@@ -86,6 +86,15 @@
                   }, 500);
                 }
               });
+            }else{
+              showTotal({
+                title: response.msg,
+                complete() {
+                  setTimeout(() => {
+                    that.$router.back();
+                  }, 500);
+                }
+              });
             }
           }).catch(error => {
             console.log("更新商品出错", error);
