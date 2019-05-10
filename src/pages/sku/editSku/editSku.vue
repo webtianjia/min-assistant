@@ -143,7 +143,7 @@
       if (param) {
         let goodsObj = JSON.parse(param);
         this.sku = Object.assign(this.sku, goodsObj);
-        this.setNumber(goodsObj.goods_code);
+        this.$refs.inputCode.input=goodsObj.goods_code;
         this.isUpdate = true;
       } else {
         this.isUpdate = false;
