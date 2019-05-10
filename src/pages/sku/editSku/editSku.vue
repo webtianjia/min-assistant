@@ -87,14 +87,8 @@
                 }
               });
             }else{
-              let that = this;
               showTotal({
-                title: response.msg,
-                complete() {
-                  setTimeout(() => {
-                    that.$router.back();
-                  }, 500);
-                }
+                title: response.msg
               });
             }
           }).catch(error => {
