@@ -49,9 +49,6 @@ const actions = {
     sku.getSkuList(state.param).then(response => {
       if (response.success) {
         state.total = response.data.total;
-        if ((parseInt(state.total / state.param.limit) + 1) <= state.param.page) {
-          return
-        }
         commit("setSkuList", response.data.rows);
       }
     }).catch(error => {
