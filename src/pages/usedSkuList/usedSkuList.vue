@@ -202,14 +202,18 @@
       this.getSkuList();
     },
     watch: {
-      searchInput() {
-        this.$nextTick(() => {
-          this.searchSku();
-        });
+      searchInput(val) {
+        if(this.checkedSwitch&&!val){
+          this.initParam();
+        }else {
+          this.$nextTick(() => {
+            this.searchSku();
+          });
+        }
+
       },
       matchInput(value) {/*zn*/
         this.$nextTick(() => {
-          this.initParam();
           this.matchSkuList({ goods_name: value });
         });
       },
