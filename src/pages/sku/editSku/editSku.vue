@@ -3,6 +3,10 @@
     <form @submit.prevent="formSubmit">
       <div class="form-horizontal">
         <div class="form-group">
+          <label class="label">商品条码</label>
+          <input-code ref="inputCode" bg="#fff" pl="0" ft="30rpx" color="#2e2e2e" @change="setNumber" placeholder="请输入/或扫描商品条码" placeholder-style="color:#9e9e9e;"></input-code>
+        </div>
+        <div class="form-group">
           <label class="label">商品名称</label>
           <input name="skuName" v-model="sku.goods_name" class="form-control"
                  placeholder-style="color:#9e9e9e;"
@@ -36,17 +40,22 @@
   import { WxValidate } from "@/utils/WxValidate";
   import { mapActions } from "vuex";
   import { showTotal } from "@/utils/index";
-
+  import inputCode from "@/components/input-code";
   let Validate;
   export default {
     name: "createSku",
+    components:{
+      inputCode
+    },
     data() {
       return {
         sku: {
+          goods_code:"",
           goods_name: "",
           goods_brand: "",
           goods_standard: "",
           goods_price: ""
+
         },
         isUpdate: false
       };
@@ -55,6 +64,9 @@
       ...mapActions("editSku", {
         addSku: "addSku"
       }),
+      setNumber(value) {
+        this.sku.goods_code = value;
+      },
       formSubmit(event) {
         if (!Validate.checkForm(event.mp)) {
           const error = Validate.errorList[0];
@@ -129,7 +141,9 @@
     mounted() {
       let param = this.$mp.query.data;
       if (param) {
-        this.sku = Object.assign(this.sku, JSON.parse(param));
+        let goodsObj = JSON.parse(param);
+        this.sku = Object.assign(this.sku, goodsObj);
+        this.setNumber(goodsObj.goods_code);
         this.isUpdate = true;
       } else {
         this.isUpdate = false;
@@ -139,6 +153,7 @@
     onUnload() {
       if (this.$options.data) {
         Object.assign(this.$data, this.$options.data());
+        this.$refs.inputCode.clear();
       }
       this._watchers = [];
       if (this._watcher && this._watcher.teardown) {

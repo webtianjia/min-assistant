@@ -1,10 +1,16 @@
 <template>
   <div class="sku-card" v-if="sku">
+    <div class="card-item " v-if="sku.goods_code">
+      <div class="wrapper">
+        <span class="sku-attr color-444">{{sku.goods_code}}</span>
+      </div>
+    </div>
     <div class="card-item ">
       <div class="wrapper">
         <span class="text-overflow sku-attr w-134 color-444">{{sku.goods_name}}</span>
         <span class="sku-price warning">￥{{sku.goods_price}}</span>
         <span class="sku-attr" v-if="sku.goods_number">×{{sku.goods_number}}</span>
+
       </div>
       <div @click="goTo(sku,index)">
         <slot></slot>
@@ -74,8 +80,9 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      &:last-child {
-        margin-top: 10px;
+      margin-top: 10px;
+      &:first-child {
+        margin-top: 0
       }
       .wrapper {
         display: flex;

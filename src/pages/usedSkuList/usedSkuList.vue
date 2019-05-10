@@ -9,17 +9,21 @@
       </div>
       <split color="#fff" :height="15"></split>
       <div class="search-bar">
-        <div class="input-group" v-if="checkedSwitch">
+        <div class="input-group" v-if="!checkedSwitch">
           <i class="icon icon-search"></i>
           <input type="text" class="search-input" v-model.lazy="matchInput"
                  placeholder-style="color:#888;" @confirm="confirm" confirm-type="search" placeholder="请输入品名/品牌">
           <i class="icon icon-clear" v-show="matchInput" @click="matchInput=''"></i>
         </div>
         <div class="input-group" v-else>
-          <i class="icon icon-search"></i>
-          <input type="text" class="search-input" v-model.lazy="searchInput"
-                 placeholder-style="color:#888;" @confirm="confirm" confirm-type="search" placeholder="请输入品名/品牌">
-          <i class="icon icon-clear" v-show="searchInput" @click="searchInput=''"></i>
+          <!--<i class="icon icon-search"></i>-->
+
+          <input-code ref="inputCode"  @change="setNumber" placeholder="请输入品名/品牌/或扫描商品条码"></input-code>
+
+   <!--       <input type="text" class="search-input" v-model.lazy="searchInput"
+                 placeholder-style="color:#888;" @confirm="confirm" confirm-type="search" placeholder="">
+
+          <i class="icon icon-clear" v-show="searchInput" @click="searchInput=''"></i>-->
         </div>
       </div>
     </div>
@@ -55,6 +59,8 @@
 </template>
 
 <script>
+  import inputCode from "@/components/input-code";
+
   import split from "@/components/split";
   import settlementDialog from "@/components/settlement-dialog";
   import skuCard2 from "@/components/skuCard-2";
@@ -88,7 +94,8 @@
       return {
         display_good_box: false,
         searchInput: "",
-        matchInput: ""
+        matchInput: "",
+        bar_code:""
       };
     },
     methods: {
@@ -113,6 +120,10 @@
         getSkuList: "getSkuList",
         matchSkuList: "matchSkuList"
       }),
+      setNumber(value) {
+        console.log(value)
+        this.searchInput = value;
+      },
       goTo(url, data) {
         this.searchInput = "";
         this.$router.push({
@@ -191,7 +202,7 @@
     },
     watch: {
       searchInput() {
-        if (this.checkedSwitch) return;
+        //if (this.checkedSwitch) return;
         this.$nextTick(() => {
           this.searchSku();
         });
@@ -212,6 +223,7 @@
       }
     },
     components: {
+      inputCode,
       split,
       settlementDialog,
       skuCard2,

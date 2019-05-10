@@ -1,6 +1,6 @@
 <template>
   <div class="input-code">
-    <input class="form-control" v-model="input" type="text" :placeholder="placeholder" placeholder-style="color:#888;">
+    <input class="form-control" :style="{background:bg,color:color,paddingLeft:pl,fontSize:ft}" v-model="input" type="text" :placeholder="placeholder" placeholder-style="color:#888;">
     <div class="input-code-btn" @click="scanCode"></div>
   </div>
 </template>
@@ -12,8 +12,18 @@
       placeholder: {
         type: String,
         default: ""
-      }
+      },
+      scanType:{
+       type:String,
+       default:"barCode"
+      },
+      xyLabel:false,
+      bg:"#e9e9e9",
+      color:"#888",
+      pl:"20rpx",
+      ft:"30rpx"
     },
+
     data() {
       return {
         input: ""
@@ -24,14 +34,31 @@
         let that = this;
         wx.scanCode({
           onlyFromCamera: true,
+          scanType:this.scanType,
           success: (response) => {
-            if (response.scanType === "CODE_128") {
-              that.input = response.result;
-            } else {
-              wx.showModal({
-                content: "请扫描或输入正确西游标签跟踪号",
-                showCancel: false
-              });
+            if (response) {
+              if (this.xyLabel) {
+                if (response.scanType === "CODE_128") {
+                  that.input = response.result;
+                } else {
+                  wx.showModal({
+                    content: "请扫描或输入正确西游标签跟踪号",
+                    showCancel: false
+                  });
+                }
+              } else {
+                if (response.scanType !== "QR_CODE" &&
+                    response.scanType !=="PDF_417" &&
+                  response.scanType !=="DATA_MATRIX" &&
+                  response.scanType !=="WX_CODE") {
+                  that.input = response.result;
+                } else {
+                  wx.showModal({
+                    content: "请扫描正确的条形码",
+                    showCancel: false
+                  });
+                }
+              }
             }
           }
         });

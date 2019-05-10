@@ -20,7 +20,7 @@
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#2aa2fa",
     "navigationBarTitleText": "转运助手",
-    "navigationBarTextStyle": "#ffffff"
+    "navigationBarTextStyle": "white"
   },
   "tabBar": {
     "color": "#96cef8",

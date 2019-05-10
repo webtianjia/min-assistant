@@ -10,10 +10,10 @@
       </div>-->
       <split></split>
       <div class="order-no">
-        <input-code ref="inputCode" @change="setNumber" placeholder="扫描或输入小面单号"></input-code>
+        <input-code ref="inputCode" :xyLabel="true" @change="setNumber" placeholder="扫描或输入小面单号"></input-code>
       </div>
     </div>
-    <div style="padding-top: 96px"></div>
+    <div style="padding-top: 65px"></div>
     <div class="line" style="margin: 0"></div>
 
     <div class="address-card" @click="goTo('/pages/sender/senderList/main?createOrder=true')">
@@ -141,6 +141,12 @@
       }),
       submitOrder() {
         if (this.hasSubmit) {
+          if(!this.package_number){
+            showTotal({
+              title: "请扫描输入面单号"
+            });
+            return;
+          }
           this.addOrder({
             order: JSON.stringify({
               package_number: this.package_number,
