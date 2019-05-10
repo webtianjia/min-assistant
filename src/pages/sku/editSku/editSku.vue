@@ -87,6 +87,7 @@
                 }
               });
             }else{
+              let that = this;
               showTotal({
                 title: response.msg,
                 complete() {
