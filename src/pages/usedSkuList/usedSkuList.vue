@@ -180,7 +180,6 @@
     },
     onShow() {
       this.searchInput = "";
-      this.matchInput = "";
       if (!this.checkedSwitch) {
         this.searchSku();
       }
