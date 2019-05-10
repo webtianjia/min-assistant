@@ -45,18 +45,21 @@ const mutations = {
 
 //actions
 const actions = {
-  getSkuList({ commit, state }) {
+  getSkuList({commit, state}) {
     sku.getSkuList(state.param).then(response => {
       if (response.success) {
         state.total = response.data.total;
+        if ((parseInt(state.total / state.param.limit) + 1) <= state.param.page) {
+          return
+        }
         commit("setSkuList", response.data.rows);
       }
     }).catch(error => {
       console.log("获取商品失败", error);
     });
   },
-  async deleteSku({ commit }, id) {
-    await   sku.deleteSku({ id }).then(response => {
+  async deleteSku({commit}, id) {
+    await   sku.deleteSku({id}).then(response => {
       if (response.success) {
         commit("deleteSku", id);
       }
