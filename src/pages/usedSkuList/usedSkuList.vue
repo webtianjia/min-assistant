@@ -189,7 +189,10 @@
       if (this.$options.data) {
         Object.assign(this.$data, this.$options.data());
       }
-      this.$refs.inputCode.clear();
+      if( this.$refs.inputCode){
+        this.$refs.inputCode.clear();//qin
+      }
+
       this._watchers = [];
       if (this._watcher && this._watcher.teardown) {
         this._watcher.teardown();
