@@ -189,6 +189,7 @@
       if (this.$options.data) {
         Object.assign(this.$data, this.$options.data());
       }
+      this.$refs.inputCode.clear();
       this._watchers = [];
       if (this._watcher && this._watcher.teardown) {
         this._watcher.teardown();
