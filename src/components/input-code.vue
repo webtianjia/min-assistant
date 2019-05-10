@@ -1,6 +1,6 @@
 <template>
   <div class="input-code">
-    <input class="form-control" :style="{background:bg,color:color,paddingLeft:pl,fontSize:ft}" v-model="input" type="text" :placeholder="placeholder" placeholder-style="color:#888;">
+    <input class="form-control" :style="{background:bg,color:color,paddingLeft:pl,fontSize:ft}" @confirm="confirm" v-model.lazy="input" type="text" :placeholder="placeholder" placeholder-style="color:#888;">
     <div class="input-code-btn" @click="scanCode"></div>
   </div>
 </template>

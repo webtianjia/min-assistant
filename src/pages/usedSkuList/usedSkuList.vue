@@ -213,9 +213,14 @@
 
       },
       matchInput(value) {/*zn*/
-        this.$nextTick(() => {
-          this.matchSkuList({ goods_name: value });
-        });
+        if(this.checkedSwitch){
+          this.$nextTick(() => {
+            this.matchSkuList({ goods_name: value });
+          });
+        }else {
+          this.initParam();
+        }
+
       },
       checkedSwitch(value) {
         this.searchInput = "";
