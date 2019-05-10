@@ -47,6 +47,7 @@ const mutations = {
 const actions = {
   getSkuList({commit, state}) {
     sku.getSkuList(state.param).then(response => {
+      console.log(154444)
       if (response.success) {
         state.total = response.data.total;
         commit("setSkuList", response.data.rows);
