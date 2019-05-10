@@ -176,12 +176,17 @@
         }, "小数点后最多为两位");
       }
     },
-    onShow(){
+    mounted(){
       let param = this.$mp.query.data;
       if (param) {
         let goodsObj =  JSON.parse(param);
+        console.log(goodsObj)
         this.sku = Object.assign(this.sku, goodsObj);
-        this.$refs.inputCode.input=goodsObj.goods_code;
+        if(goodsObj.goods_code){
+          this.$refs.inputCode.input=goodsObj.goods_code;
+        }else {
+          this.sku.inputCode=''
+        }
         this.isUpdate = true;
       } else {
         this.isUpdate = false;
