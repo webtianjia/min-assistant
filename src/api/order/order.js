@@ -18,6 +18,9 @@ export default {
   },
   updateOrder: (data) => {
     return fly.request("/order/update", data);
+  },
+  getOrderRoute:(data) => {
+    return fly.request("/route/getRoute", data);
   }
 };
 
