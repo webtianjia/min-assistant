@@ -7,7 +7,7 @@
           <div v-for="item in vList" class="transport-text" :key="item.id">
             <span class="transport-left">{{item.time}}</span>
             <span class="transport-middle">--</span>
-            <span class="transport-right">{{item.context}}</span>
+            <span class="transport-right">{{item.info}}</span>
           </div>
         </div>
       </div>
