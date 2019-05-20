@@ -29,14 +29,8 @@ const actions = {
     });
   },
 
-  async getOrderRoute({commit}, wayBillNo) {
-    await  order.getOrderRoute({wayBillNo}).then(response => {
-      if (response.success) {
-        commit("setOrderRoute", response.data);
-      }
-    }).catch(error => {
-      console.log("获取订单路由失败", error);
-    });
+   getOrderRoute({commit}, wayBillNo) {
+     return  order.getOrderRoute({wayBillNo})
   }
 };
 
