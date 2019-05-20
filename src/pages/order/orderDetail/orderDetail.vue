@@ -19,7 +19,7 @@
       <span class="text">{{orderDetail.waybill_no}}</span>
       <button class="button" @click="getOrderRoute">查看物流</button>
     </div>
-    <vDialog v-model="ruleModal" @show="ruleModalConfirm" :vList="message"></vDialog>
+    <vDialog v-model="ruleModal" @show="ruleModalConfirm" :vList="orderRoute"></vDialog>
     <split></split>
     <div class="package-card">
       <div class="card-item">
@@ -136,40 +136,29 @@
             state.orderDetail.statusStr = formatStatus(state.orderDetail.status);
           }
           return state.orderDetail;
-        }
+        },
+        orderRoute:"orderRoute"
       })
     },
     methods: {
       ...mapActions("orderDetail", {
-        getOrder: "getOrder"
+        getOrder: "getOrder",
       }),
       ruleModalConfirm(value) {
         this.ruleModal = value;
       },
       getOrderRoute() {
+
         let that = this;
-        wx.showLoading({
-          title: "正在查询....",
-          mask: true
-        });
-        let url = "https://m.kuaidi100.com/query?type=" + getLogisticsCode(this.orderDetail.logistics_main) + "&postid=" + this.orderDetail.waybill_no + "&id=1&valicode=&temp=" + Math.random();
-        wx.request({
-          url: url,
-          success(res) {
-            wx.hideLoading();
-            if (res.data.status == "200") {
-              that.message = res.data.data;
-              that.ruleModalConfirm(true);
-            } else {
-              showTotal({
-                title: res.data.message,
-                icon: "none",
-                mask: true,
-                duration: 3000
-              });
-            }
+        this.$store.dispatch("orderDetail/getOrderRoute",this.orderDetail.waybill_no).then(()=>{
+
+          if(this.orderRoute.length>0){
+            that.ruleModalConfirm(true);
+          }else {
+            
           }
-        });
+
+        })
       },
       toggleClass() {
         this.active = !this.active;
@@ -284,26 +273,6 @@
       }
     }
   };
-
-  function getLogisticsCode(str) {
-    switch (str) {
-      case "圆通":
-        return "yuantong";
-      case "申通":
-        return "shentong";
-      case "中通":
-        return "zhongtong";
-      case "韵达":
-        return "yunda";
-      case "邮政":
-        return "youzhengguonei";
-      case "顺丰":
-        return "shunfeng";
-      default :
-        return "";
-    }
-  }
-
 
 </script>
 
