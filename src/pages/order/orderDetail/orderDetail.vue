@@ -119,7 +119,8 @@
         active: false,
         imageUrl: null,
         ruleModal: false,
-        message: null
+        message: null,
+        orderRoute:[]
       };
     },
     components: {
@@ -136,8 +137,7 @@
             state.orderDetail.statusStr = formatStatus(state.orderDetail.status);
           }
           return state.orderDetail;
-        },
-        orderRoute:"orderRoute"
+        }
       })
     },
     methods: {
@@ -150,15 +150,35 @@
       getOrderRoute() {
 
         let that = this;
-        this.$store.dispatch("orderDetail/getOrderRoute",this.orderDetail.waybill_no).then(()=>{
+        this.$store.dispatch("orderDetail/getOrderRoute",this.orderDetail.waybill_no).then(response => {
+          if (response.success) {
+              this.orderRoute=response.data;
+              that.ruleModalConfirm(true);
+          }else{
+            showTotal(
+              {
+                title: response.msg,
+                icon: "none",
+                mask: true
+              });
+          }
+        }).catch(error => {
+          console.log("获取订单路由失败", error);
+        });/*then((resp)=>{
 
           if(this.orderRoute.length>0){
             that.ruleModalConfirm(true);
           }else {
-            
+
+            showTotal(
+              {
+                title: "网络繁忙，请稍后再试",
+                icon: "none",
+                mask: true
+              });
           }
 
-        })
+        })*/
       },
       toggleClass() {
         this.active = !this.active;
