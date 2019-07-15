@@ -103,7 +103,8 @@
     },
     data() {
       return {
-        package_number: null
+        package_number: null,
+        loading:false
       };
     },
     computed: {
@@ -147,6 +148,11 @@
             });
             return;
           }
+          if(this.loading) return;
+          this.loading=true
+          wx.showLoading({
+            title:"loading..."
+          });
           this.addOrder({
             order: JSON.stringify({
               package_number: this.package_number,
@@ -176,12 +182,17 @@
                   data: JSON.stringify(response.data)
                 }
               });
+              this.loading=false
+              wx.hideLoading()
             } else {
               showTotal({
                 title: `${response.msg}`
               });
+              this.loading=false
             }
           }).catch(error => {
+            wx.hideLoading()
+            this.loading=false
             console.log("创建订单出错", error);
           });
         }
