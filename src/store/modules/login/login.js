@@ -17,6 +17,7 @@ const actions = {
   async login({ commit }, param) {
     await  loginAPI.login(param).then(response => {
       if (response.success) {
+
         commit("setStorage", response.data);
       }
     }).catch(error => {
